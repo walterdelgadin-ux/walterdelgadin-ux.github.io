@@ -39,7 +39,7 @@
 
 <div class="container">
   <div class="card">
-    <h2>GENERADOR DE NOVEDADES OPERATIVAS</h2>
+    <h2>SISTEMA DE REGISTRO OPERATIVO FERROVIARIO</h2>
     <div class="grid">
       <div class="field">
         <label>Tipo de Novedad</label>
@@ -60,7 +60,7 @@
   </div>
 
   <div class="card" id="moduloDinamico">
-    <!-- Campos renderizados dinámicamente -->
+    <!-- Campos dinámicos -->
   </div>
 
   <div class="card">
@@ -74,14 +74,80 @@
 </div>
 
 <script>
-function val(id) { const el = document.getElementById(id); return el ? el.value.trim().toUpperCase() : ''; }
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim().toUpperCase() : '';
+}
+
+function setSalida(texto, carga, avisos) {
+  document.getElementById('novedadTexto').innerText = texto;
+  setMeta(carga, avisos);
+}
+
+function setMeta(c, a) {
+  document.getElementById('metaInfo').innerText = `Carga: ${c} | Avisos: ${a}`;
+}
+
+function itemAvisoVertical(nom, cargo) {
+  return nom ? `- ${cargo} ${nom}` : `- ${cargo}`;
+}
+
+function buildAviso(apellido, sector) {
+  return apellido ? `${apellido} ${sector}` : sector;
+}
+
+function formatearCA(arr) {
+  const filtrados = arr.filter(x => x && x.trim() !== '');
+  if (filtrados.length === 0) return '';
+  return `C/A: ${filtrados.join(', ')}.-`;
+}
 
 function renderModulo() {
   const tipo = document.getElementById('tipoNovedad').value;
   const mod = document.getElementById('moduloDinamico');
   let html = '';
 
-  if (tipo === 'accidente') {
+  if (tipo === 'ats') {
+    html = `
+      <h3>Falla / Aplicación de A.T.S. (Carga 801)</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genATS()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genATS()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genATS()"></div>
+        <div class="field"><label>Locomotora / Dupla</label><input id="loc" placeholder="ej. 4986/4916 o 7774" oninput="genATS()"></div>
+        <div class="field"><label>Coches (opcional)</label><input id="coches" placeholder="ej. 5 COCHES" oninput="genATS()"></div>
+        <div class="field"><label>Estación / Lugar</label><input id="lugar" oninput="genATS()"></div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Motivo de Aplicación</label>
+          <input id="motivo_ats" placeholder="ej. DEJO EL CONTROLER EN PUNTO 1" oninput="genATS()">
+        </div>
+        <div class="field">
+          <label>¿Puede Reponer?</label>
+          <select id="puede_reponer" onchange="toggleAtsPrecinto(); genATS();">
+            <option value="no">NO</option>
+            <option value="si">SÍ</option>
+          </select>
+        </div>
+        <div class="field" id="f_corta_precinto">
+          <label>¿Corta Precinto?</label>
+          <select id="corta_precinto" onchange="toggleAtsNumPrecinto(); genATS();">
+            <option value="si">SÍ</option>
+            <option value="no">NO</option>
+          </select>
+        </div>
+        <div class="field" id="f_num_precinto">
+          <label>N° de Precinto</label>
+          <input id="precinto" placeholder="ej. 2527009" oninput="genATS()">
+        </div>
+      </div>
+      <h3 style="margin-top:16px;">Avisos</h3>
+      <div class="grid">
+        <div class="field"><label>Apellido Mat. Rodante</label><input id="ap_mr" oninput="genATS()"></div>
+        <div class="field"><label>Apellido Video MKS</label><input id="ap_video" oninput="genATS()"></div>
+        <div class="field"><label>Apellido Sup. Por Informes</label><input id="ap_sup" oninput="genATS()"></div>
+      </div>
+    `;
+  } else if (tipo === 'accidente') {
     html = `
       <h3>Accidente de Persona (Carga 80)</h3>
       <div class="grid">
@@ -98,7 +164,7 @@ function renderModulo() {
             <option value="EMBESTIMIENTO">EMBESTIMIENTO</option>
           </select>
         </div>
-        <div class="field"><label>Obstrucción de Vía</label><input id="obstruccion" placeholder="ej. OBSTRUYE VÍA PRINCIPAL" oninput="genAccidente()"></div>
+        <div class="field"><label>Obstrucción de Vía</label><input id="obstruccion" placeholder="ej. OBSTRUYE VÍA DESCENDENTE" oninput="genAccidente()"></div>
       </div>
       <h3 style="margin-top:16px;">Recepción de Avisos (Apellido opcional)</h3>
       <div class="grid">
@@ -119,22 +185,6 @@ function renderModulo() {
         <div class="field"><label>Sup. Boulogne</label><input id="av_boulogne" placeholder="Apellido Sup." oninput="genAccidente()"></div>
       </div>
     `;
-  } else if (tipo === 'ats') {
-    html = `
-      <h3>Falla de A.T.S. (Carga 801)</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genATS()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genATS()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genATS()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genATS()"></div>
-        <div class="field"><label>Coches</label><input id="coches" oninput="genATS()"></div>
-        <div class="field"><label>Estación / Lugar</label><input id="lugar" oninput="genATS()"></div>
-        <div class="field"><label>N° Precinto Cortado</label><input id="precinto" oninput="genATS()"></div>
-        <div class="field"><label>Atraso (minutos)</label><input id="atraso" oninput="genATS()"></div>
-        <div class="field"><label>Apellido Mat. Rodante</label><input id="ap_mr" oninput="genATS()"></div>
-        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genATS()"></div>
-      </div>
-    `;
   } else if (tipo === 'animales' || tipo === 'persona_vias') {
     const esAnimal = tipo === 'animales';
     html = `
@@ -148,12 +198,12 @@ function renderModulo() {
         <div class="field"><label>Lugar / Entre Estaciones</label><input id="lugar" oninput="genVias('${tipo}')"></div>
         <div class="field">
           <label>Acción / Dinámica</label>
-          <select id="dinamica" onchange="genVias('${tipo}')">
+          <select id="dinamica" onchange="toggleFrenoVias(); genVias('${tipo}');">
             <option value="freno">APLICÓ FRENO DE EMERGENCIA (SIN CONSECUENCIAS)</option>
             <option value="aviso">SOLO OBSERVA (SIN APLICACIÓN DE FRENO)</option>
           </select>
         </div>
-        <div class="field" id="f_atraso"><label>Minutos Atraso (si hubo freno)</label><input id="atraso" oninput="genVias('${tipo}')"></div>
+        <div class="field" id="f_atraso"><label>Minutos Atraso</label><input id="atraso" oninput="genVias('${tipo}')"></div>
         <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genVias('${tipo}')"></div>
         <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genVias('${tipo}')"></div>
       </div>
@@ -342,87 +392,104 @@ function renderModulo() {
   document.getElementById('novedadTexto').innerText = 'COMPLETE LOS CAMPOS PARA GENERAR LA NOVEDAD...';
 }
 
-function setSalida(texto, carga, avisos) {
-  document.getElementById('novedadTexto').innerText = texto;
-  setMeta(carga, avisos);
+function toggleAtsPrecinto() {
+  const puede = document.getElementById('puede_reponer').value === 'si';
+  const fCorta = document.getElementById('f_corta_precinto');
+  const fNum = document.getElementById('f_num_precinto');
+  if (puede) {
+    fCorta.classList.add('hidden');
+    fNum.classList.add('hidden');
+  } else {
+    fCorta.classList.remove('hidden');
+    toggleAtsNumPrecinto();
+  }
 }
 
-function setMeta(c, a) {
-  document.getElementById('metaInfo').innerText = `Carga: ${c} | Avisos: ${a}`;
+function toggleAtsNumPrecinto() {
+  const corta = document.getElementById('corta_precinto').value === 'si';
+  const fNum = document.getElementById('f_num_precinto');
+  fNum.classList.toggle('hidden', !corta);
 }
 
-function itemAviso(nom, cargo) {
-  return nom ? `- ${cargo} ${nom}` : `- ${cargo}`;
+function genATS() {
+  const cochesTxt = val('coches') ? ` (${val('coches')})` : '';
+  const cond = `CONDUCTOR ${val('cond_ap')} (${val('cond_leg')}) T/${val('tren')} (${val('loc')})${cochesTxt}`;
+  
+  let accion = '';
+  const puede = document.getElementById('puede_reponer').value === 'si';
+  if (puede) {
+    accion = 'PUEDE REPONER Y REANUDA MARCHA.-';
+  } else {
+    const corta = document.getElementById('corta_precinto').value === 'si';
+    if (corta) {
+      accion = `NO PUEDE REPONER, CORTA PRECINTO ${val('precinto')}. REPONE Y REANUDA MARCHA.-`;
+    } else {
+      accion = 'NO PUEDE REPONER. FORMACIÓN A LA ESPERA DE AUXILIO DE MATERIAL RODANTE.-';
+    }
+  }
+
+  const cuerpo = `INFORMA EN ESTACIÓN ${val('lugar')} SE APLICA DISPOSITIVO ATS, ${val('motivo_ats')}. ${accion}`;
+
+  const avisos = [];
+  if (val('ap_mr')) avisos.push(`C/A ${val('ap_mr')} MAT. RODANTE.-`);
+  if (val('ap_video')) avisos.push(`C/A ${val('ap_video')} VIDEO MKS.-`);
+  if (val('ap_sup')) avisos.push(`SUP. ${val('ap_sup')} POR INFORMES.-`);
+
+  const salida = `${cond}\n${cuerpo}\n${avisos.join('\n')}`;
+  setSalida(salida, '801', 'M/R, VIDEO MKS, SUP');
 }
 
-function formatearCA(arr) {
-  const filtrados = arr.filter(x => x && x.trim() !== '');
-  if (filtrados.length === 0) return '';
-  return `C/A: ${filtrados.join(', ')}.-`;
-}
-
-// 1. Accidente
 function genAccidente() {
   const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
   const desc = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${val('tipo_acc')} DE PERSONA EN ZONA DE VÍAS. ${val('obstruccion')}. FORMACIÓN DETENIDA A LA ESPERA DE SERVICIOS DE EMERGENCIA Y POLICÍA.-`;
   
   const avisos = [
-    itemAviso(val('av_guardia'), 'GUARDIA TRANSPORTE'),
-    itemAviso(val('av_benaglia'), 'DR. BENAGLIA'),
-    itemAviso(val('av_seguridad'), 'SEGURIDAD'),
-    itemAviso(val('av_coord'), 'COORD. ESTACIÓN'),
-    itemAviso(val('av_jefetrans'), 'JEFE TRANSPORTE'),
-    itemAviso(val('av_jefecirc'), 'JEFE CIRCULACIÓN'),
-    itemAviso(val('av_legales'), 'DEPTO. LEGALES'),
-    itemAviso(val('av_traccion'), 'JEFE TRACCIÓN'),
-    itemAviso(val('av_resguardo'), 'JEFE RESGUARDO'),
-    itemAviso(val('av_pasajero'), 'ATENCIÓN AL PASAJERO'),
-    itemAviso(val('av_psicologa'), 'PSICÓLOGA'),
-    itemAviso(val('av_video'), 'VIDEO'),
-    itemAviso(val('av_deposito'), 'DEPÓSITO'),
-    itemAviso(val('av_senalamiento'), 'SEÑALAMIENTO'),
+    itemAvisoVertical(val('av_guardia'), 'GUARDIA TRANSPORTE'),
+    itemAvisoVertical(val('av_benaglia'), 'DR. BENAGLIA'),
+    itemAvisoVertical(val('av_seguridad'), 'SEGURIDAD'),
+    itemAvisoVertical(val('av_coord'), 'COORD. ESTACIÓN'),
+    itemAvisoVertical(val('av_jefetrans'), 'JEFE TRANSPORTE'),
+    itemAvisoVertical(val('av_jefecirc'), 'JEFE CIRCULACIÓN'),
+    itemAvisoVertical(val('av_legales'), 'DEPTO. LEGALES'),
+    itemAvisoVertical(val('av_traccion'), 'JEFE TRACCIÓN'),
+    itemAvisoVertical(val('av_resguardo'), 'JEFE RESGUARDO'),
+    itemAvisoVertical(val('av_pasajero'), 'ATENCIÓN AL PASAJERO'),
+    itemAvisoVertical(val('av_psicologa'), 'PSICÓLOGA'),
+    itemAvisoVertical(val('av_video'), 'VIDEO'),
+    itemAvisoVertical(val('av_deposito'), 'DEPÓSITO'),
+    itemAvisoVertical(val('av_senalamiento'), 'SEÑALAMIENTO'),
     `- SUP. ${val('av_boulogne')} EST. BOULOGNE (POR INFORME).-`
   ].join('\n');
 
   setSalida(`${cond}\n${desc}\nCON AVISOS A:\n${avisos}`, '80', '1-2-6-7-8-9-10-11-12-13-14-15-16-17 + SUP');
 }
 
-// 2. ATS
-function genATS() {
-  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const cuerpo = `INF. EN ${val('lugar')} DISPLAY DE A.T.S. PRESENTA 3 LÍNEAS. PROCEDE A CORTAR PRECINTO N° ${val('precinto')}. REANUDA MARCHA CON ${val('atraso')} MIN. ATRASO.-`;
-  const ca = formatearCA([
-    val('ap_mr') ? `${val('ap_mr')} MAT. RODANTE` : 'MAT. RODANTE',
-    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
-  ]);
-  setSalida(`${cond}\n${cuerpo}\n${ca}`, '801', 'MR, SUP');
+function toggleFrenoVias() {
+  const din = document.getElementById('dinamica').value;
+  const fAtraso = document.getElementById('f_atraso');
+  if (fAtraso) fAtraso.classList.toggle('hidden', din !== 'freno');
 }
 
-// 3. Animales / Personas
 function genVias(tipo) {
   const esAnimal = tipo === 'animales';
   const sujeto = esAnimal ? 'ANIMALES EN ZONA DE VÍAS' : 'PERSONA EN ZONA DE VÍAS';
   const din = document.getElementById('dinamica').value;
-  const fAtraso = document.getElementById('f_atraso');
   
   let cuerpo = '';
   if (din === 'freno') {
-    if (fAtraso) fAtraso.classList.remove('hidden');
     cuerpo = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${sujeto}. SIN CONSECUENCIAS. REANUDA MARCHA CON ${val('atraso')} MIN. ATRASO.-`;
   } else {
-    if (fAtraso) fAtraso.classList.add('hidden');
     cuerpo = `INF. QUE AL PASO POR ${val('lugar')} OBSERVA ${sujeto}.-`;
   }
 
   const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
   const ca = formatearCA([
-    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    buildAviso(val('ap_resg'), 'RESGUARDO'),
     val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
   ]);
   setSalida(`${cond}\n${cuerpo}\n${ca}`, '78', 'RESGUARDO, SUP');
 }
 
-// 4. Barrera
 function genBarrera() {
   const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
   const plural = val('brazo').includes('AMBOS');
@@ -431,13 +498,12 @@ function genBarrera() {
 
   const cuerpo = `INF. QUE AL PASO POR P. a N. ${val('pan_nom')} Km ${val('pan_km')} ${val('brazo')} SE ENCUENTRA${plural ? 'N' : ''} ${est}.-`;
   const ca = formatearCA([
-    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
-    val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO'
+    buildAviso(val('ap_resg'), 'RESGUARDO'),
+    buildAviso(val('ap_sen'), 'SEÑALAMIENTO')
   ]);
   setSalida(`${cond}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, SEÑALAMIENTO');
 }
 
-// 5. Circuito / Señal
 function toggleCircuito() {
   const orig = document.getElementById('origen').value;
   document.getElementById('bloque_sup').classList.toggle('hidden', orig !== 'sup');
@@ -464,27 +530,25 @@ function genCircuito() {
       cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. SIN AFECTACIÓN DE BARRERAS.-`;
     } else {
       cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. EN P. a N. ${val('pan_nom_c')} Km ${val('pan_km_c')} BARRERAS ${val('pan_estado_c')}.-`;
-      caArr.push(val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO');
+      caArr.push(buildAviso(val('ap_resg'), 'RESGUARDO'));
     }
-    caArr.unshift(val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO');
+    caArr.unshift(buildAviso(val('ap_sen'), 'SEÑALAMIENTO'));
   } else {
     cabecera = `COND. ${val('cond_ap_c')} (${val('cond_leg_c')}) - T/${val('tren_c')} LOC.${val('loc_c')} (${val('coches_c')})`;
     cuerpo = `INF. QUE AL PASO POR ${val('lugar_c')} SEÑAL ${val('senal_id')} SE ENCUENTRA ${val('estado_senal')}.-`;
-    caArr.push(val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO');
+    caArr.push(buildAviso(val('ap_sen'), 'SEÑALAMIENTO'));
   }
 
   setSalida(`${cabecera}\n${cuerpo}\n${formatearCA(caArr)}`, 'VARIOS', 'SEÑALAMIENTO (Y RESGUARDO)');
 }
 
-// 6. Cambio FC
 function genCambioFC() {
   const cab = `SUP. ${val('sup_ap')} EST. ${val('estacion')}`;
   const cuerpo = `INF. CAMBIO ${val('cambio_id')} FUERA DE CORRESPONDENCIA EN POSICIÓN ${val('posicion')}.-`;
-  const ca = formatearCA([val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO']);
+  const ca = formatearCA([buildAviso(val('ap_sen'), 'SEÑALAMIENTO')]);
   setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'SEÑALAMIENTO');
 }
 
-// 7. Falta de Custodia
 function genCustodia() {
   const cab = `GUARDATRÉN ${val('guarda_ap')} (${val('guarda_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
   const res = document.getElementById('resolucion').value;
@@ -492,24 +556,22 @@ function genCustodia() {
   
   const cuerpo = `INF. EN EST. ${val('lugar')} DEMORA POR FALTA DE CUSTODIA POLICIAL A BORDO. FORMACIÓN ESTUVO DETENIDA ${val('minutos')} MIN. EN DICHA ESTACIÓN. ${fin}`;
   const ca = formatearCA([
-    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    buildAviso(val('ap_resg'), 'RESGUARDO'),
     val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
   ]);
   setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, SUP');
 }
 
-// 8. Vias Entrega
 function genViasEntrega() {
   const cab = `INSP. DE VÍA ${val('insp_ap')}`;
   const cuerpo = `ENTREGA ${val('via')} ENTRE ESTACIONES ${val('est_a')} Y ${val('est_b')} PARA TRABAJOS DE MECANIZADO, SEGÚN CONSIGNA DE TRABAJO ${val('consigna')}.-`;
   const ca = formatearCA([
-    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
-    val('ap_infra') ? `${val('ap_infra')} INFRAESTRUCTURA` : 'INFRAESTRUCTURA'
+    buildAviso(val('ap_resg'), 'RESGUARDO'),
+    buildAviso(val('ap_infra'), 'INFRAESTRUCTURA')
   ]);
   setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, INFRAESTRUCTURA');
 }
 
-// 9. Vias Devolucion
 function toggleDevolucion() {
   const esPrec = document.getElementById('condicion').value === 'precaucion';
   document.getElementById('f_vel').classList.toggle('hidden', !esPrec);
@@ -524,8 +586,8 @@ function genViasDevolucion() {
     : 'CIRCULACIÓN NORMAL POR EL SECTOR.-';
   
   const ca = formatearCA([
-    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
-    val('ap_infra') ? `${val('ap_infra')} INFRAESTRUCTURA` : 'INFRAESTRUCTURA'
+    buildAviso(val('ap_resg'), 'RESGUARDO'),
+    buildAviso(val('ap_infra'), 'INFRAESTRUCTURA')
   ]);
   setSalida(`${cab} ${condTxt}\n${ca}`, 'VARIOS', 'RESGUARDO, INFRAESTRUCTURA');
 }
