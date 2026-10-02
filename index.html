@@ -47,14 +47,14 @@
 <body>
 
 <div class="container">
-  <h1>PCZ - ASISTENTE DE NOVEDADES <span>V2.0 COMPLETO</span></h1>
+  <h1>PCZ - ASISTENTE DE NOVEDADES <span>V2.1</span></h1>
 
   <div class="card">
     <div>
       <label>Tipo de Evento</label>
       <select id="tipoEvento" onchange="actualizarPlantilla()">
         <optgroup label="Seguridad de Marcha / Conducción">
-          <option value="ATS">801 - Aplicación de A.T.S. (Corte/Display)</option>
+          <option value="ATS">801 - Aplicación de A.T.S.</option>
           <option value="HV">51 - Hombre Vivo / Pedal no responde</option>
           <option value="PRECAUCION">78 - Precaución Km 23/737 Exceso Pasaje</option>
         </optgroup>
@@ -62,21 +62,21 @@
           <option value="FRENO">101 - Freno en Coches / Afloje Manual</option>
           <option value="TRACCION">100 - Falla de Tracción / Poca Potencia / GR</option>
           <option value="CAMBIO_LOC">100 - Cambio de Locomotora / Rotación</option>
-          <option value="LUZ_PUERTA">103 - Coche s/Luz / Puerta / Cadena floja</option>
+          <option value="LUZ_PUERTA">103 - Coche sin Luz / Puerta Trabada</option>
         </optgroup>
         <optgroup label="Pasajeros / Policía / Seguridad">
-          <option value="CAIDA">81 - Pasajero Caído en Andén al asc/desc</option>
+          <option value="CAIDA">81 - Pasajero Caído en Andén</option>
           <option value="DESCOMP">71 - Pasajero Descompensado / SAME</option>
           <option value="POLICIA">78 - Intervención Policial / Gresca / Ebriedad</option>
           <option value="ARREBATO">78 - Arrebato / Robo de Celular</option>
-          <option value="APEDREO">78 - Apedreo a Formación / Vidrio roto</option>
+          <option value="APEDREO">78 - Apedreo a Formación / Vidrio Roto</option>
           <option value="VIA">15 - Persona / Menor en Zona de Vías</option>
           <option value="OBITO">80 - Accidente Fatal / Óbito / Arrollamiento</option>
-          <option value="CABALLOS">15 - Animales / Equinos en Zona de Vías</option>
+          <option value="CABALLOS">15 - Animales / Equinos en Vía</option>
           <option value="CUSTODIA">78 - Falta de Custodia Policial</option>
         </optgroup>
         <optgroup label="Infraestructura / Señalamiento / Vía">
-          <option value="PAN">40 - P.A.N. / Barrera Dañada / Brazo roto</option>
+          <option value="PAN">40 - P.A.N. / Barrera Dañada / Brazo Roto</option>
           <option value="SENAL">41 - Señal Apagada / Circuito Ocupado</option>
           <option value="CAMBIO_ADV">42 - Cambio (A.D.V.) Fuera de Corresp.</option>
           <option value="OBRA">63 - Vía y Obras / Entrega / Mecanizado</option>
@@ -142,7 +142,7 @@
 
 <script>
   const configuraciones = {
-    ATS: { carga: "801", avisos: "1 2 3 10 11 35", extraLbl: "N° Precinto / Display", extraPh: "Cortó pcto 2527478 (3 líneas)" },
+    ATS: { carga: "801", avisos: "1 2 3 10 11 35", extraLbl: "N° Precinto / Display", extraPh: "Cortó pcto 2527478, display 3 líneas" },
     HV: { carga: "51", avisos: "1 2 3 10 11", extraLbl: "Detalle Dispositivo", extraPh: "No respondió pedal, repone y reanuda" },
     PRECAUCION: { carga: "78", avisos: "1 2 3", extraLbl: "Sentido / Velocidad", extraPh: "Sentido desc. a 12 km/h por sobrecarga" },
     
@@ -188,108 +188,117 @@
     const min = document.getElementById("minutos").value.trim();
     const extra = document.getElementById("extra").value.trim();
 
-    const cochesTxt = coches ? ` (${coches})` : "";
-    const minTxt = min ? ` CON ${min} MIN. ATRASO` : "";
-    const extraTxt = extra ? ` ${extra}.` : "";
+    const cochesTxt = coches ? " (" + coches + ")" : "";
+    const minTxt = min ? " CON " + min + " MIN. ATRASO" : "";
+    const extraTxt = extra ? ". " + extra : "";
 
-    let l1 = `${pers} - T/${tren} LOC.${loc}${cochesTxt}`;
+    let l1 = pers + " - T/" + tren + " LOC." + loc + cochesTxt;
     let l2 = "";
     let l3 = "";
 
     switch(tipo) {
       case "ATS":
-        l2 = `INF. EN ${lugar} APLICACIÓN DE A.T.S..${extraTxt} REPONE Y REANUDA${minTxt}.-`;
-        l3 = `C/A: M. RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-`;
+        l2 = "INF. EN " + lugar + " APLICACIÓN DE A.T.S." + extraTxt + ". REPONE Y REANUDA" + minTxt + ".-";
+        l3 = "C/A: M. RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
         break;
       case "HV":
-        l2 = `INF. EN ${lugar} APLICACIÓN DE HOMBRE VIVO.${extraTxt} REPONE Y REANUDA${minTxt}.-`;
-        l3 = `C/A: MATERIAL RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-`;
+        l2 = "INF. EN " + lugar + " APLICACIÓN DE HOMBRE VIVO" + extraTxt + ". REPONE Y REANUDA" + minTxt + ".-";
+        l3 = "C/A: MATERIAL RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
         break;
       case "PRECAUCION":
-        l1 = `SUPERVISIÓN PCZ - T/${tren} LOC.${loc}${cochesTxt}`;
-        l2 = `NOTIFICA PRECAUCIÓN EN ${lugar}.${extraTxt} REANUDA MARCHA.-`;
-        l3 = `C/A: CONTROL, DIAGRAMA, SUPERVISIÓN CABECERA.-`;
+        l1 = "SUPERVISIÓN PCZ - T/" + tren + " LOC." + loc + cochesTxt;
+        l2 = "NOTIFICA PRECAUCIÓN EN " + lugar + extraTxt + ". REANUDA MARCHA.-";
+        l3 = "C/A: CONTROL, DIAGRAMA, SUPERVISIÓN CABECERA.-";
         break;
       case "FRENO":
-        l2 = `INF. EN ${lugar} DETENCIÓN POR FORMACIÓN FRENADA.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-`;
+        l2 = "INF. EN " + lugar + " DETENCIÓN POR FORMACIÓN FRENADA" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-";
         break;
       case "TRACCION":
-        l2 = `INF. EN ${lugar} PÉRDIDA DE MARCHA POR POCA POTENCIA/TRACCIÓN.${extraTxt} CONTINÚA${minTxt}.-`;
-        l3 = `C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-`;
+        l2 = "INF. EN " + lugar + " PÉRDIDA DE MARCHA POR POCA POTENCIA/TRACCIÓN" + extraTxt + ". CONTINÚA" + minTxt + ".-";
+        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-";
         break;
       case "CAMBIO_LOC":
-        l2 = `INF. EN ${lugar} RECAMBIO DE UNIDAD TRACCIÓN.${extraTxt} CONTINÚA ROTACIÓN${minTxt}.-`;
-        l3 = `C/A: MATERIAL RODANTE, DIAGRAMA, AUX. BOULOGNE.-`;
+        l2 = "INF. EN " + lugar + " RECAMBIO DE UNIDAD TRACCIÓN" + extraTxt + ". CONTINÚA ROTACIÓN" + minTxt + ".-";
+        l3 = "C/A: MATERIAL RODANTE, DIAGRAMA, AUX. BOULOGNE.-";
         break;
       case "LUZ_PUERTA":
-        l2 = `INF. EN ${lugar} ATENCIÓN DE MATERIAL RODANTE EN COCHES.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: MATERIAL RODANTE, AUX. BOULOGNE.-`;
+        l2 = "INF. EN " + lugar + " ATENCIÓN DE MATERIAL RODANTE EN COCHES" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE.-";
         break;
       case "CAIDA":
-        l2 = `INF. DETENIDO EN ${lugar} POR PASAJERO QUE DESCENDIÓ EN MOVIMIENTO CAYENDO A PLATAFORMA.${extraTxt} REANUDA MARCHA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (INFORME Y ACTA).-`;
+        l2 = "INF. DETENIDO EN " + lugar + " POR PASAJERO QUE DESCENDIÓ EN MOVIMIENTO CAYENDO A PLATAFORMA" + extraTxt + ". REANUDA MARCHA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (INFORME Y ACTA).-";
         break;
       case "DESCOMP":
-        l2 = `INF. DETENIDO EN ${lugar} POR PASAJERO DESCOMPUESTO A BORDO.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, SERVICIO MÉDICO, AUX. BOULOGNE (INFORME Y ACTA).-`;
+        l2 = "INF. DETENIDO EN " + lugar + " POR PASAJERO DESCOMPUESTO A BORDO" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, SERVICIO MÉDICO, AUX. BOULOGNE (INFORME Y ACTA).-";
         break;
       case "POLICIA":
-        l2 = `INF. DETENIDO EN ${lugar} POR INTERVENCIÓN POLICIAL A BORDO.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, POLICÍA FEDERAL / PROVINCIA, AUX. BOULOGNE.-`;
+        l2 = "INF. DETENIDO EN " + lugar + " POR INTERVENCIÓN POLICIAL A BORDO" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, POLICÍA FEDERAL / PROVINCIA, AUX. BOULOGNE.-";
         break;
       case "ARREBATO":
-        l2 = `INF. EN ${lugar} ARREBATO DE PERTENENCIAS A PASAJERO.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, VIDEO MKS, POLICÍA FEDERAL, AUX. BOULOGNE.-`;
+        l2 = "INF. EN " + lugar + " ARREBATO DE PERTENENCIAS A PASAJERO" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, VIDEO MKS, POLICÍA FEDERAL, AUX. BOULOGNE.-";
         break;
       case "APEDREO":
-        l2 = `INF. EN ${lugar} APEDREO A LA FORMACIÓN.${extraTxt} CONTINÚA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, VIDEO MKS, MATERIAL RODANTE, AUX. BOULOGNE.-`;
+        l2 = "INF. EN " + lugar + " APEDREO A LA FORMACIÓN" + extraTxt + ". CONTINÚA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, VIDEO MKS, MATERIAL RODANTE, AUX. BOULOGNE.-";
         break;
       case "VIA":
-        l2 = `INF. EN ${lugar} FRENO DE EMERGENCIA PREVENTIVO POR PERSONAS EN ZONA DE VÍAS.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-`;
+        l2 = "INF. EN " + lugar + " FRENO DE EMERGENCIA PREVENTIVO POR PERSONAS EN ZONA DE VÍAS" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
         break;
       case "OBITO":
-        l2 = `INF. EN ${lugar} ACCIDENTE DE PERSONA CON ÓBITO SOBRE VÍA.${extraTxt} VÍA OBSTRUIDA.-`;
-        l3 = `C/A: LEGALES, RESGUARDO, SEG. OPERATIVA, SERVICIO MÉDICO, CIENTÍFICA.-`;
+        l2 = "INF. EN " + lugar + " ACCIDENTE DE PERSONA CON ÓBITO SOBRE VÍA" + extraTxt + ". VÍA OBSTRUIDA.-";
+        l3 = "C/A: LEGALES, RESGUARDO, SEG. OPERATIVA, SERVICIO MÉDICO, CIENTÍFICA.-";
         break;
       case "CABALLOS":
-        l2 = `INF. EN ${lugar} ANIMALES EQUINOS EN ZONA DE VÍAS.${extraTxt} CIRCULA A LA VISTA.-`;
-        l3 = `C/A: RESGUARDO, CONTROL DE TRÁFICO.-`;
+        l2 = "INF. EN " + lugar + " ANIMALES EQUINOS EN ZONA DE VÍAS" + extraTxt + ". CIRCULA A LA VISTA.-";
+        l3 = "C/A: RESGUARDO, CONTROL DE TRÁFICO.-";
         break;
       case "CUSTODIA":
-        l2 = `INF. DEMORADO EN ${lugar} POR FALTA DE CUSTODIA POLICIAL.${extraTxt} REANUDA${minTxt}.-`;
-        l3 = `C/A: RESGUARDO, GUARDIA DE TRANSPORTE.-`;
+        l2 = "INF. DEMORADO EN " + lugar + " POR FALTA DE CUSTODIA POLICIAL" + extraTxt + ". REANUDA" + minTxt + ".-";
+        l3 = "C/A: RESGUARDO, GUARDIA DE TRANSPORTE.-";
         break;
       case "PAN":
-        l2 = `INF. P.A.N. ${lugar} NOVEDAD EN BARRERAS.${extraTxt} CIRCULA CON PRECAUCIÓN.-`;
-        l3 = `C/A: SEÑALAMIENTO, RESGUARDO (PARA CUSTODIA).-`;
+        l2 = "INF. P.A.N. " + lugar + " NOVEDAD EN BARRERAS" + extraTxt + ". CIRCULA CON PRECAUCIÓN.-";
+        l3 = "C/A: SEÑALAMIENTO, RESGUARDO (PARA CUSTODIA).-";
         break;
       case "SENAL":
-        l2 = `INF. EN ${lugar} FALLA DE SEÑALAMIENTO / CIRCUITO OCUPADO.${extraTxt} FRANQUEA A PELIGRO${minTxt}.-`;
-        l3 = `C/A: SEÑALAMIENTO, SUPERVISIÓN RETIRO / BOULOGNE.-`;
+        l2 = "INF. EN " + lugar + " FALLA DE SEÑALAMIENTO / CIRCUITO OCUPADO" + extraTxt + ". FRANQUEA A PELIGRO" + minTxt + ".-";
+        l3 = "C/A: SEÑALAMIENTO, SUPERVISIÓN RETIRO / BOULOGNE.-";
         break;
       case "CAMBIO_ADV":
-        l2 = `INF. EN ${lugar} APARATO DE VÍA FUERA DE CORRESPONDENCIA.${extraTxt} MANIOBRA MANUAL${minTxt}.-`;
-        l3 = `C/A: SEÑALAMIENTO, GUARDIA DE VÍA, SUPERVISIÓN.-`;
+        l2 = "INF. EN " + lugar + " APARATO DE VÍA FUERA DE CORRESPONDENCIA" + extraTxt + ". MANIOBRA MANUAL" + minTxt + ".-";
+        l3 = "C/A: SEÑALAMIENTO, GUARDIA DE VÍA, SUPERVISIÓN.-";
         break;
       case "OBRA":
-        l1 = `INSP. VÍA Y OBRAS - SECTOR ${lugar}`;
-        l2 = `ENTREGA / RECEPCIÓN DE VÍA SEGÚN CONSIGNA.${extraTxt}-`;
-        l3 = `C/A: GUARDIA DE VÍA, RESGUARDO, CONTROL CIRCULACIÓN.-`;
+        l1 = "INSP. VÍA Y OBRAS - SECTOR " + lugar;
+        l2 = "ENTREGA / RECEPCIÓN DE VÍA SEGÚN CONSIGNA" + extraTxt + ".-";
+        l3 = "C/A: GUARDIA DE VÍA, RESGUARDO, CONTROL CIRCULACIÓN.-";
         break;
     }
 
-    const textoFinal = `${l1}\\n${l2}\\n${l3}\\n\\n[CARGA: ${cfg.carga} | AVISOS: ${cfg.avisos}]`;
-    document.getElementById("salidaTexto").value = textoFinal;
+    l2 = l2.replace(/\.\./g, ".");
+
+    const bloqueFinal = [
+      l1,
+      l2,
+      l3,
+      "",
+      "[CARGA: " + cfg.carga + " | AVISOS: " + cfg.avisos + "]"
+    ];
+
+    document.getElementById("salidaTexto").value = bloqueFinal.join("\n");
   }
 
   function copiarAlPortapapeles() {
     const area = document.getElementById("salidaTexto");
     area.select();
     area.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(area.value).then(() => {
+    navigator.clipboard.writeText(area.value).then(function() {
       alert("✅ ¡Copiado al portapapeles listo para pegar!");
     });
   }
