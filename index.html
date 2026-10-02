@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PCZ Asistente de Carga</title>
+  <style>
+    :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --primary: #238636; --accent: #58a6ff; --text: #c9d1d9; --text-white: #f0f6fc; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 12px; font-size: 14px; }
+    .container { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+    h1 { font-size: 16px; color: var(--text-white); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 11px; font-weight: 600; color: #8b949e; text-transform: uppercase; }
+    select, input, textarea { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; color: #fff; padding: 8px; font-size: 14px; outline: none; }
+    .row { display: flex; gap: 6px; }
+    .row > div { flex: 1; }
+    .badge-box { display: flex; gap: 6px; }
+    .badge { flex: 1; background: #21262d; border: 1px solid var(--border); border-radius: 6px; padding: 6px; text-align: center; }
+    .badge-val { font-size: 18px; font-weight: 800; color: #3fb950; }
+    .badge-avi { font-size: 13px; font-weight: 700; color: var(--accent); }
+    textarea { resize: none; font-family: monospace; font-size: 12px; color: #7ee787; background: #000; }
+    .btn { width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 12px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>PCZ - ASISTENTE DE CARGA</h1>
+  <div class="card">
+    <label>Evento</label>
+    <select id="tipoEvento" onchange="act()">
+      <option value="ATS">801 - Aplicación de A.T.S.</option>
+      <option value="CAIDA">81 - Pasajero Caído en Andén</option>
+      <option value="FRENO">101 - Freno en Coches / Afloje</option>
+      <option value="PAN">40 - P.A.N. / Barrera Dañada</option>
+      <option value="VIA">15 - Persona en Zona de Vías</option>
+      <option value="TRACCION">100 - Falla Tracción / Potencia</option>
+      <option value="DESCOMP">71 - Pasajero Descompensado</option>
+      <option value="HV">51 - Hombre Vivo</option>
+      <option value="OBRA">63 - Vía y Obras / Entrega</option>
+    </select>
+    <div class="row">
+      <div><label>Tren</label><input type="text" id="tren" placeholder="3081" oninput="gen()"></div>
+      <div><label>Loc</label><input type="text" id="loc" placeholder="EM02" oninput="gen()"></div>
+      <div><label>Coches</label><input type="text" id="coches" placeholder="4983/4912" oninput="gen()"></div>
+    </div>
+    <div class="row">
+      <div><label>Personal</label><input type="text" id="pers" placeholder="COND. APELLIDO (LEG)" oninput="gen()"></div>
+      <div><label>Lugar</label><input type="text" id="lugar" placeholder="EST. GRIERSON" oninput="gen()"></div>
+    </div>
+    <div class="row">
+      <div><label>Min Demora</label><input type="number" id="min" placeholder="4" oninput="gen()"></div>
+      <div><label id="lblExtra">Detalle Extra</label><input type="text" id="extra" placeholder="Cortó pcto 2527478" oninput="gen()"></div>
+    </div>
+  </div>
+  <div class="badge-box">
+    <div class="badge"><div style="font-size:10px;color:#8b949e">CARGA</div><div class="badge-val" id="boxCarga">801</div></div>
+    <div class="badge"><div style="font-size:10px;color:#8b949e">AVISOS</div><div class="badge-avi" id="boxAvisos">1 2 3 10 11 35</div></div>
+  </div>
+  <div class="card">
+    <textarea id="salida" rows="5" readonly></textarea>
+    <button class="btn" onclick="copiar()">📋 COPIAR NOVEDAD Y CÓDIGOS</button>
+  </div>
+</div>
+<script>
+const cfg = {
+  ATS: { c: "801", a: "1 2 3 10 11 35", ex: "Cortó pcto 2527478" },
+  CAIDA: { c: "81", a: "1 2 3 7 8 11", ex: "Se retira s/datos, s/asistencia" },
+  FRENO: { c: "101", a: "1 2 3 10", ex: "Afloje coche 4410" },
+  PAN: { c: "40", a: "1 2 3 4 7", ex: "Brazo asc. roto" },
+  VIA: { c: "15", a: "1 2 3 7 11", ex: "F/E preventivo, despejado" },
+  TRACCION: { c: "100", a: "1 2 3 10", ex: "Anuló 2/5 por patinaje" },
+  DESCOMP: { c: "71", a: "1 2 3 7 12", ex: "Móvil 38 SAME, firma acta" },
+  HV: { c: "51", a: "1 2 3 10 11", ex: "No respondió pedal" },
+  OBRA: { c: "63", a: "1 2 3 6 7", ex: "Bateo y soldaduras" }
+};
+function act(){
+  const t = document.getElementById("tipoEvento").value;
+  document.getElementById("boxCarga").innerText = cfg[t].c;
+  document.getElementById("boxAvisos").innerText = cfg[t].a;
+  document.getElementById("extra").placeholder = cfg[t].ex;
+  gen();
+}
+function gen(){
+  const t = document.getElementById("tipoEvento").value;
+  const tr = document.getElementById("tren").value||"[TREN]";
+  const lc = document.getElementById("loc").value||"[LOC]";
+  const co = document.getElementById("coches").value ? ` (${document.getElementById("coches").value})` : "";
+  const pe = document.getElementById("pers").value||"COND. [APELLIDO] ([LEG])";
+  const lu = document.getElementById("lugar").value||"[LUGAR]";
+  const mi = document.getElementById("min").value ? ` CON ${document.getElementById("min").value} MIN. ATRASO` : "";
+  const ex = document.getElementById("extra").value ? ` ${document.getElementById("extra").value}.` : "";
+  let l1 = `${pe} - T/${tr} LOC.${lc}${co}`;
+  let l2 = `INF. EN ${lu} NOVEDAD DE ${t}.${ex} REANUDA${mi}.-`;
+  let l3 = `C/A: DEPENDENCIAS CORRESPONDIENTES.-`;
+  if(t==="ATS"){ l2=`INF. EN ${lu} APLICACIÓN DE A.T.S..${ex} REPONE Y REANUDA${mi}.-`; l3=`C/A: M. RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-`; }
+  if(t==="CAIDA"){ l2=`INF. DETENIDO EN ${lu} POR PASAJERO QUE DESCENDIÓ EN MOVIMIENTO.${ex} REANUDA${mi}.-`; l3=`C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (INFORME Y ACTA).-`; }
+  if(t==="FRENO"){ l2=`INF. EN ${lu} FORMACIÓN FRENADA.${ex} REANUDA${mi}.-`; l3=`C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-`; }
+  if(t==="PAN"){ l2=`INF. P.A.N. ${lu} NOVEDAD DE BARRERA.${ex} MARCHA A LA VISTA.-`; l3=`C/A: SEÑALAMIENTO, RESGUARDO (CUSTODIA).-`; }
+  if(t==="VIA"){ l2=`INF. EN ${lu} PERSONAS EN ZONA DE VÍAS.${ex} REANUDA${mi}.-`; l3=`C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE.-`; }
+  document.getElementById("salida").value = `${l1}\n${l2}\n${l3}\n\n[CARGA: ${cfg[t].c} | AVISOS: ${cfg[t].a}]`;
+}
+function copiar(){
+  const s = document.getElementById("salida");
+  s.select();
+  navigator.clipboard.writeText(s.value);
+  alert("✅ ¡Copiado!");
+}
+act();
+</script>
+</body>
+</html>
