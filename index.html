@@ -30,7 +30,7 @@
     button:hover { background-color: var(--accent-hover); }
     button.btn-clear { background-color: #dc2626; }
     button.btn-clear:hover { background-color: #b91c1c; }
-    .output-box { background-color: #08090b; border: 1px solid var(--border); border-radius: 4px; padding: 12px; white-space: pre-wrap; font-family: monospace; font-size: 0.95rem; color: #38bdf8; min-height: 120px; }
+    .output-box { background-color: #08090b; border: 1px solid var(--border); border-radius: 4px; padding: 12px; white-space: pre; font-family: "Courier New", Courier, monospace; font-size: 0.95rem; color: #38bdf8; min-height: 120px; overflow-x: auto; }
     .meta-tag { font-size: 0.75rem; background-color: #2e3440; color: #94a3b8; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
     .hidden { display: none; }
   </style>
@@ -79,8 +79,43 @@ function val(id) {
   return el ? el.value.trim().toUpperCase() : '';
 }
 
+// Función estricta: envuelve texto a un máximo de 69 caracteres sin partir palabras
+function formatearRenglones(texto, limite = 69) {
+  const lineasOriginales = texto.split('\n');
+  const lineasFinales = [];
+
+  for (const linea of lineasOriginales) {
+    if (linea.length <= limite) {
+      lineasFinales.push(linea);
+      continue;
+    }
+
+    const palabras = linea.split(' ');
+    let lineaActual = '';
+
+    for (const palabra of palabras) {
+      if (!palabra) continue;
+      if (lineaActual === '') {
+        lineaActual = palabra;
+      } else if ((lineaActual + ' ' + palabra).length <= limite) {
+        lineaActual += ' ' + palabra;
+      } else {
+        lineasFinales.push(lineaActual);
+        lineaActual = palabra;
+      }
+    }
+
+    if (lineaActual !== '') {
+      lineasFinales.push(lineaActual);
+    }
+  }
+
+  return lineasFinales.join('\n');
+}
+
 function setSalida(texto, carga, avisos) {
-  document.getElementById('novedadTexto').innerText = texto;
+  const formateado = formatearRenglones(texto, 69);
+  document.getElementById('novedadTexto').innerText = formateado;
   setMeta(carga, avisos);
 }
 
@@ -424,7 +459,7 @@ function genATS() {
     if (corta) {
       accion = `NO PUEDE REPONER, CORTA PRECINTO ${val('precinto')}. REPONE Y REANUDA MARCHA.-`;
     } else {
-      accion = 'NO PUEDE REPONER.-';
+      accion = 'NO PUEDE REPONER. FORMACIÓN A LA ESPERA DE AUXILIO DE MATERIAL RODANTE.-';
     }
   }
 
