@@ -2,309 +2,546 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PCZ Asistente de Novedades</title>
-  <meta name="theme-color" content="#121820">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Registro Operativo Ferroviario</title>
   <style>
     :root {
-      --bg: #0d1117;
-      --card: #161b22;
-      --border: #30363d;
-      --primary: #238636;
-      --primary-hover: #2ea043;
-      --accent: #58a6ff;
-      --text: #c9d1d9;
-      --text-white: #f0f6fc;
-      --tag-bg: #21262d;
+      --bg: #121418;
+      --card-bg: #1c1f26;
+      --border: #2e3440;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text: #e5e9f0;
+      --text-muted: #94a3b8;
+      --success: #10b981;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 12px; font-size: 14px; }
-    .container { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-    h1 { font-size: 16px; color: var(--text-white); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-    h1 span { font-size: 11px; background: var(--border); padding: 2px 6px; border-radius: 4px; color: #8b949e; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    label { font-size: 11px; font-weight: 600; color: #8b949e; text-transform: uppercase; margin-bottom: 3px; display: block; }
-    select, input, textarea {
-      width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 6px; color: var(--text-white); padding: 9px 10px; font-size: 14px; outline: none;
-    }
-    select:focus, input:focus, textarea:focus { border-color: var(--accent); }
-    .row { display: flex; gap: 8px; }
-    .row > div { flex: 1; }
-    .badge-box { display: flex; gap: 8px; }
-    .badge {
-      flex: 1; background: var(--tag-bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px; text-align: center;
-    }
-    .badge-title { font-size: 10px; color: #8b949e; font-weight: 700; text-transform: uppercase; }
-    .badge-value { font-size: 18px; font-weight: 800; color: #3fb950; margin-top: 2px; }
-    .badge-avisos { font-size: 14px; font-weight: 700; color: var(--accent); margin-top: 2px; letter-spacing: 1px; }
-    textarea { resize: none; font-family: monospace; font-size: 12px; line-height: 1.4; color: #7ee787; background: #030712; }
-    .btn {
-      width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 6px; padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;
-    }
-    .btn:active { background: var(--primary-hover); transform: scale(0.98); }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
+    body { background-color: var(--bg); color: var(--text); padding: 16px; margin: 0; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 16px; }
+    .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    h2, h3 { margin-top: 0; color: #fff; font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    input, select, textarea { background-color: #0f1115; border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 4px; font-size: 0.9rem; }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
+    .btn-group { display: flex; gap: 8px; margin-top: 12px; }
+    button { background-color: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
+    button:hover { background-color: var(--accent-hover); }
+    button.btn-clear { background-color: #dc2626; }
+    button.btn-clear:hover { background-color: #b91c1c; }
+    .output-box { background-color: #08090b; border: 1px solid var(--border); border-radius: 4px; padding: 12px; white-space: pre-wrap; font-family: monospace; font-size: 0.95rem; color: #38bdf8; min-height: 120px; }
+    .meta-tag { font-size: 0.75rem; background-color: #2e3440; color: #94a3b8; padding: 2px 6px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>PCZ - ASISTENTE DE NOVEDADES <span>V2.1</span></h1>
-
   <div class="card">
-    <div>
-      <label>Tipo de Evento</label>
-      <select id="tipoEvento" onchange="actualizarPlantilla()">
-        <optgroup label="Seguridad de Marcha / Conducción">
-          <option value="ATS">801 - Aplicación de A.T.S.</option>
-          <option value="HV">51 - Hombre Vivo / Pedal no responde</option>
-          <option value="PRECAUCION">78 - Precaución Km 23/737 Exceso Pasaje</option>
-        </optgroup>
-        <optgroup label="Material Rodante / Coches">
-          <option value="FRENO">101 - Freno en Coches / Afloje Manual</option>
-          <option value="TRACCION">100 - Falla de Tracción / Poca Potencia / GR</option>
-          <option value="CAMBIO_LOC">100 - Cambio de Locomotora / Rotación</option>
-          <option value="LUZ_PUERTA">103 - Coche sin Luz / Puerta Trabada</option>
-        </optgroup>
-        <optgroup label="Pasajeros / Policía / Seguridad">
-          <option value="CAIDA">81 - Pasajero Caído en Andén</option>
-          <option value="DESCOMP">71 - Pasajero Descompensado / SAME</option>
-          <option value="POLICIA">78 - Intervención Policial / Gresca / Ebriedad</option>
-          <option value="ARREBATO">78 - Arrebato / Robo de Celular</option>
-          <option value="APEDREO">78 - Apedreo a Formación / Vidrio Roto</option>
-          <option value="VIA">15 - Persona / Menor en Zona de Vías</option>
-          <option value="OBITO">80 - Accidente Fatal / Óbito / Arrollamiento</option>
-          <option value="CABALLOS">15 - Animales / Equinos en Vía</option>
-          <option value="CUSTODIA">78 - Falta de Custodia Policial</option>
-        </optgroup>
-        <optgroup label="Infraestructura / Señalamiento / Vía">
-          <option value="PAN">40 - P.A.N. / Barrera Dañada / Brazo Roto</option>
-          <option value="SENAL">41 - Señal Apagada / Circuito Ocupado</option>
-          <option value="CAMBIO_ADV">42 - Cambio (A.D.V.) Fuera de Corresp.</option>
-          <option value="OBRA">63 - Vía y Obras / Entrega / Mecanizado</option>
-        </optgroup>
-      </select>
-    </div>
-
-    <div class="row">
-      <div>
-        <label>Tren</label>
-        <input type="text" id="tren" placeholder="3081" oninput="generar()">
-      </div>
-      <div>
-        <label>Locomotora</label>
-        <input type="text" id="loc" placeholder="EM02" oninput="generar()">
-      </div>
-      <div>
-        <label>Coches (Punta/Punta)</label>
-        <input type="text" id="coches" placeholder="4983/4912" oninput="generar()">
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <label>Personal (Rol / Apellido / Leg.)</label>
-        <input type="text" id="personal" placeholder="COND. CAPELLETTI (3051)" oninput="generar()">
-      </div>
-      <div>
-        <label>Lugar / Estación / Km</label>
-        <input type="text" id="lugar" placeholder="EST. GRIERSON" oninput="generar()">
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <label>Minutos Atraso</label>
-        <input type="number" id="minutos" placeholder="4" oninput="generar()">
-      </div>
-      <div id="campoExtraCont">
-        <label id="lblExtra">Detalle Extra</label>
-        <input type="text" id="extra" placeholder="Cortó pcto 2527478" oninput="generar()">
+    <h2>GENERADOR DE NOVEDADES OPERATIVAS</h2>
+    <div class="grid">
+      <div class="field">
+        <label>Tipo de Novedad</label>
+        <select id="tipoNovedad" onchange="renderModulo()">
+          <option value="ats">A.T.S. (Carga 801)</option>
+          <option value="accidente">Accidente de Persona (Carga 80)</option>
+          <option value="animales">Animales en Zona de Vías</option>
+          <option value="persona_vias">Persona en Zona de Vías</option>
+          <option value="barrera">Falla / Rotura de Barrera P. a N.</option>
+          <option value="circuito_senal">Falla de Señal / Circuito Ocupado</option>
+          <option value="cambio_fc">Cambio Fuera de Correspondencia</option>
+          <option value="custodia">Falta de Custodia Policial</option>
+          <option value="vias_entrega">Vías / Entregas / Mecanizados</option>
+          <option value="vias_devolucion">Recepción / Devolución de Vía</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <div class="badge-box">
-    <div class="badge">
-      <div class="badge-title">Código Carga</div>
-      <div class="badge-value" id="boxCarga">801</div>
-    </div>
-    <div class="badge">
-      <div class="badge-title">Cadena de Avisos</div>
-      <div class="badge-avisos" id="boxAvisos">1 2 3 10 11 35</div>
-    </div>
+  <div class="card" id="moduloDinamico">
+    <!-- Campos renderizados dinámicamente -->
   </div>
 
   <div class="card">
-    <label>Texto Estandarizado (3 Líneas)</label>
-    <textarea id="salidaTexto" rows="5" readonly></textarea>
-    <button class="btn" onclick="copiarAlPortapapeles()">📋 COPIAR NOVEDAD Y CÓDIGOS</button>
+    <div id="metaInfo" class="meta-tag">Carga: - | Avisos: -</div>
+    <div class="output-box" id="novedadTexto">SELECCIONE Y COMPLETE LOS CAMPOS...</div>
+    <div class="btn-group">
+      <button onclick="copiarNovedad()">Copiar Novedad Limpia</button>
+      <button class="btn-clear" onclick="limpiarTodo()">Limpiar</button>
+    </div>
   </div>
 </div>
 
 <script>
-  const configuraciones = {
-    ATS: { carga: "801", avisos: "1 2 3 10 11 35", extraLbl: "N° Precinto / Display", extraPh: "Cortó pcto 2527478, display 3 líneas" },
-    HV: { carga: "51", avisos: "1 2 3 10 11", extraLbl: "Detalle Dispositivo", extraPh: "No respondió pedal, repone y reanuda" },
-    PRECAUCION: { carga: "78", avisos: "1 2 3", extraLbl: "Sentido / Velocidad", extraPh: "Sentido desc. a 12 km/h por sobrecarga" },
-    
-    FRENO: { carga: "101", avisos: "1 2 3 10", extraLbl: "Coche Afectado / Reserva", extraPh: "Afloje coche 4410, dejó EM02 Retiro" },
-    TRACCION: { carga: "100", avisos: "1 2 3 10", extraLbl: "Acción Motores", extraPh: "Anuló 2/5 por patinaje, máx 45 km/h" },
-    CAMBIO_LOC: { carga: "100", avisos: "1 2 3 10", extraLbl: "Motivo / Nueva Loc", extraPh: "Por baja potencia, continúa con E717" },
-    LUZ_PUERTA: { carga: "103", avisos: "1 2 3 10", extraLbl: "Coche / Falla", extraPh: "Coche 4421 sin luz, normaliza M/R" },
-    
-    CAIDA: { carga: "81", avisos: "1 2 3 7 8 11", extraLbl: "Estado Pasajero", extraPh: "Se retira s/datos, no requiere SAME" },
-    DESCOMP: { carga: "71", avisos: "1 2 3 7 12", extraLbl: "Datos SAME / Acta", extraPh: "Móvil 38 SAME, firma acta s/traslado" },
-    POLICIA: { carga: "78", avisos: "1 2 3 7 17", extraLbl: "Motivo Intervención", extraPh: "Gresca a bordo, descienden 2 masculinos" },
-    ARREBATO: { carga: "78", avisos: "1 2 3 7 11 17", extraLbl: "Detalle Hecho", extraPh: "Arrebato en andén, delincuente a la fuga" },
-    APEDREO: { carga: "78", avisos: "1 2 3 7 11", extraLbl: "Coche / Daño", extraPh: "Acrílico capot corto roto, sin lesiones" },
-    VIA: { carga: "15", avisos: "1 2 3 7 11", extraLbl: "Resolución", extraPh: "F/E preventivo, persona se retira de traza" },
-    OBITO: { carga: "80", avisos: "1 2 3 7 8 10 11 19", extraLbl: "Vía / V.S.P.", extraPh: "Óbito en traza, se establece V.S.P." },
-    CABALLOS: { carga: "15", avisos: "1 2 3 7", extraLbl: "Progresiva Km", extraPh: "Equinos en vía km 44/500, marcha a la vista" },
-    CUSTODIA: { carga: "78", avisos: "1 2 3 7", extraLbl: "Motivo / Destacamento", extraPh: "Falta de efectivo policial al partir" },
-    
-    PAN: { carga: "40", avisos: "1 2 3 4 7", extraLbl: "Brazo / Barrera", extraPh: "Brazo asc. roto, c/custodia" },
-    SENAL: { carga: "41", avisos: "1 2 3 4", extraLbl: "Señal / Aspecto", extraPh: "Señal 153 a peligro / Circuito ocupado" },
-    CAMBIO_ADV: { carga: "42", avisos: "1 2 3 4", extraLbl: "N° Cambio / Posición", extraPh: "Cambio 4 fuera de corresp. en invertido" },
-    OBRA: { carga: "63", avisos: "1 2 3 6 7", extraLbl: "Sector / Tareas", extraPh: "Vía desc. bateo y soldaduras km 24 al 25" }
-  };
+function val(id) { const el = document.getElementById(id); return el ? el.value.trim().toUpperCase() : ''; }
 
-  function actualizarPlantilla() {
-    const t = document.getElementById("tipoEvento").value;
-    const cfg = configuraciones[t];
-    document.getElementById("boxCarga").innerText = cfg.carga;
-    document.getElementById("boxAvisos").innerText = cfg.avisos;
-    document.getElementById("lblExtra").innerText = cfg.extraLbl;
-    document.getElementById("extra").placeholder = cfg.extraPh;
-    generar();
+function renderModulo() {
+  const tipo = document.getElementById('tipoNovedad').value;
+  const mod = document.getElementById('moduloDinamico');
+  let html = '';
+
+  if (tipo === 'accidente') {
+    html = `
+      <h3>Accidente de Persona (Carga 80)</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genAccidente()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genAccidente()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genAccidente()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genAccidente()"></div>
+        <div class="field"><label>Coches</label><input id="coches" placeholder="ej. 5 COCHES" oninput="genAccidente()"></div>
+        <div class="field"><label>Lugar / Entre Estaciones</label><input id="lugar" oninput="genAccidente()"></div>
+        <div class="field">
+          <label>Tipo de Evento</label>
+          <select id="tipo_acc" onchange="genAccidente()">
+            <option value="ARROLLAMIENTO">ARROLLAMIENTO</option>
+            <option value="EMBESTIMIENTO">EMBESTIMIENTO</option>
+          </select>
+        </div>
+        <div class="field"><label>Obstrucción de Vía</label><input id="obstruccion" placeholder="ej. OBSTRUYE VÍA PRINCIPAL" oninput="genAccidente()"></div>
+      </div>
+      <h3 style="margin-top:16px;">Recepción de Avisos (Apellido opcional)</h3>
+      <div class="grid">
+        <div class="field"><label>1. Guardia Transporte</label><input id="av_guardia" oninput="genAccidente()"></div>
+        <div class="field"><label>2. Dr. Benaglia</label><input id="av_benaglia" oninput="genAccidente()"></div>
+        <div class="field"><label>6. Seguridad</label><input id="av_seguridad" oninput="genAccidente()"></div>
+        <div class="field"><label>7. Coord. Estación</label><input id="av_coord" oninput="genAccidente()"></div>
+        <div class="field"><label>8. Jefe Transporte</label><input id="av_jefetrans" oninput="genAccidente()"></div>
+        <div class="field"><label>9. Jefe Circulación</label><input id="av_jefecirc" oninput="genAccidente()"></div>
+        <div class="field"><label>10. Depto. Legales</label><input id="av_legales" oninput="genAccidente()"></div>
+        <div class="field"><label>11. Jefe Tracción</label><input id="av_traccion" oninput="genAccidente()"></div>
+        <div class="field"><label>12. Jefe Resguardo</label><input id="av_resguardo" oninput="genAccidente()"></div>
+        <div class="field"><label>13. Atención Pasajero</label><input id="av_pasajero" oninput="genAccidente()"></div>
+        <div class="field"><label>14. Psicóloga</label><input id="av_psicologa" oninput="genAccidente()"></div>
+        <div class="field"><label>15. Video</label><input id="av_video" oninput="genAccidente()"></div>
+        <div class="field"><label>16. Depósito</label><input id="av_deposito" oninput="genAccidente()"></div>
+        <div class="field"><label>17. Señalamiento</label><input id="av_senalamiento" oninput="genAccidente()"></div>
+        <div class="field"><label>Sup. Boulogne</label><input id="av_boulogne" placeholder="Apellido Sup." oninput="genAccidente()"></div>
+      </div>
+    `;
+  } else if (tipo === 'ats') {
+    html = `
+      <h3>Falla de A.T.S. (Carga 801)</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genATS()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genATS()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genATS()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genATS()"></div>
+        <div class="field"><label>Coches</label><input id="coches" oninput="genATS()"></div>
+        <div class="field"><label>Estación / Lugar</label><input id="lugar" oninput="genATS()"></div>
+        <div class="field"><label>N° Precinto Cortado</label><input id="precinto" oninput="genATS()"></div>
+        <div class="field"><label>Atraso (minutos)</label><input id="atraso" oninput="genATS()"></div>
+        <div class="field"><label>Apellido Mat. Rodante</label><input id="ap_mr" oninput="genATS()"></div>
+        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genATS()"></div>
+      </div>
+    `;
+  } else if (tipo === 'animales' || tipo === 'persona_vias') {
+    const esAnimal = tipo === 'animales';
+    html = `
+      <h3>${esAnimal ? 'Animales en Zona de Vías' : 'Persona en Zona de Vías'}</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Coches</label><input id="coches" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Lugar / Entre Estaciones</label><input id="lugar" oninput="genVias('${tipo}')"></div>
+        <div class="field">
+          <label>Acción / Dinámica</label>
+          <select id="dinamica" onchange="genVias('${tipo}')">
+            <option value="freno">APLICÓ FRENO DE EMERGENCIA (SIN CONSECUENCIAS)</option>
+            <option value="aviso">SOLO OBSERVA (SIN APLICACIÓN DE FRENO)</option>
+          </select>
+        </div>
+        <div class="field" id="f_atraso"><label>Minutos Atraso (si hubo freno)</label><input id="atraso" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genVias('${tipo}')"></div>
+        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genVias('${tipo}')"></div>
+      </div>
+    `;
+  } else if (tipo === 'barrera') {
+    html = `
+      <h3>Falla / Rotura de Barrera en P. a N.</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genBarrera()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genBarrera()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genBarrera()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genBarrera()"></div>
+        <div class="field"><label>Coches</label><input id="coches" oninput="genBarrera()"></div>
+        <div class="field"><label>Nombre P. a N.</label><input id="pan_nom" placeholder="ej. BOGADO" oninput="genBarrera()"></div>
+        <div class="field"><label>Kilometraje</label><input id="pan_km" placeholder="ej. 21/400" oninput="genBarrera()"></div>
+        <div class="field">
+          <label>Brazo Afectado</label>
+          <select id="brazo" onchange="genBarrera()">
+            <option value="BRAZO ASCENDENTE">BRAZO ASCENDENTE</option>
+            <option value="BRAZO DESCENDENTE">BRAZO DESCENDENTE</option>
+            <option value="AMBOS BRAZOS">AMBOS BRAZOS</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estado</label>
+          <select id="estado" onchange="genBarrera()">
+            <option value="ROTO">ROTO / S</option>
+            <option value="BAJO">BAJO / S</option>
+            <option value="SEMILEVANTADO">SEMILEVANTADO / S</option>
+          </select>
+        </div>
+        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genBarrera()"></div>
+        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genBarrera()"></div>
+      </div>
+    `;
+  } else if (tipo === 'circuito_senal') {
+    html = `
+      <h3>Falla de Señal / Circuito Ocupado</h3>
+      <div class="grid">
+        <div class="field">
+          <label>Origen del Aviso</label>
+          <select id="origen" onchange="toggleCircuito(); genCircuito();">
+            <option value="sup">SUPERVISOR DE ESTACIÓN (CIRCUITO OCUPADO)</option>
+            <option value="cond">CONDUCTOR (SEÑAL ANÓMALA)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid" id="bloque_sup" style="margin-top:12px;">
+        <div class="field"><label>Supervisor (Apellido)</label><input id="sup_ap" oninput="genCircuito()"></div>
+        <div class="field"><label>Estación</label><input id="estacion" oninput="genCircuito()"></div>
+        <div class="field"><label>Sector / Vía Afectada</label><input id="sector" oninput="genCircuito()"></div>
+        <div class="field"><label>Señal Afectada 1</label><input id="s1" oninput="genCircuito()"></div>
+        <div class="field"><label>Señal Afectada 2</label><input id="s2" oninput="genCircuito()"></div>
+        <div class="field">
+          <label>Afectación de Barreras</label>
+          <select id="afecta_barreras" onchange="toggleBarrerasCirc(); genCircuito();">
+            <option value="no">SIN AFECTACIÓN DE BARRERAS</option>
+            <option value="si">AFECTA BARRERAS</option>
+          </select>
+        </div>
+        <div class="field hidden" id="f_pan_nom"><label>P. a N. Nombre</label><input id="pan_nom_c" oninput="genCircuito()"></div>
+        <div class="field hidden" id="f_pan_km"><label>Km P. a N.</label><input id="pan_km_c" oninput="genCircuito()"></div>
+        <div class="field hidden" id="f_pan_est">
+          <label>Comportamiento Barreras</label>
+          <select id="pan_estado_c" onchange="genCircuito()">
+            <option value="PERMANECEN BAJAS">PERMANECEN BAJAS</option>
+            <option value="BAJAN A DESTIEMPO">BAJAN A DESTIEMPO</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid hidden" id="bloque_cond" style="margin-top:12px;">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Tren</label><input id="tren_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Coches</label><input id="coches_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Lugar / Estación</label><input id="lugar_c" oninput="genCircuito()"></div>
+        <div class="field"><label>Señal (Identificación)</label><input id="senal_id" oninput="genCircuito()"></div>
+        <div class="field">
+          <label>Estado Señal</label>
+          <select id="estado_senal" onchange="genCircuito()">
+            <option value="A PELIGRO">A PELIGRO</option>
+            <option value="APAGADA">APAGADA</option>
+            <option value="INTERMITENTE">INTERMITENTE</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid" style="margin-top:12px;">
+        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genCircuito()"></div>
+        <div class="field"><label>Apellido Resguardo (si afecta barreras)</label><input id="ap_resg" oninput="genCircuito()"></div>
+      </div>
+    `;
+  } else if (tipo === 'cambio_fc') {
+    html = `
+      <h3>Cambio Fuera de Correspondencia</h3>
+      <div class="grid">
+        <div class="field"><label>Supervisor (Apellido)</label><input id="sup_ap" oninput="genCambioFC()"></div>
+        <div class="field"><label>Estación</label><input id="estacion" oninput="genCambioFC()"></div>
+        <div class="field"><label>Identificación de Cambio</label><input id="cambio_id" placeholder="ej. 4 o CAMBIO 12" oninput="genCambioFC()"></div>
+        <div class="field">
+          <label>Posición</label>
+          <select id="posicion" onchange="genCambioFC()">
+            <option value="NORMAL">NORMAL</option>
+            <option value="INVERTIDA">INVERTIDA</option>
+            <option value="AMBAS POSICIONES">AMBAS POSICIONES</option>
+          </select>
+        </div>
+        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genCambioFC()"></div>
+      </div>
+    `;
+  } else if (tipo === 'custodia') {
+    html = `
+      <h3>Falta de Custodia Policial</h3>
+      <div class="grid">
+        <div class="field"><label>Guardatrén (Apellido)</label><input id="guarda_ap" oninput="genCustodia()"></div>
+        <div class="field"><label>Legajo</label><input id="guarda_leg" oninput="genCustodia()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genCustodia()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genCustodia()"></div>
+        <div class="field"><label>Coches</label><input id="coches" oninput="genCustodia()"></div>
+        <div class="field"><label>Estación Demora</label><input id="lugar" oninput="genCustodia()"></div>
+        <div class="field"><label>Minutos Detenida</label><input id="minutos" oninput="genCustodia()"></div>
+        <div class="field">
+          <label>Resolución</label>
+          <select id="resolucion" onchange="genCustodia()">
+            <option value="sin_custodia">CIRCULA SIN CUSTODIA</option>
+            <option value="con_policia">HACE PRESENTE PERSONAL POLICIAL</option>
+          </select>
+        </div>
+        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genCustodia()"></div>
+        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genCustodia()"></div>
+      </div>
+    `;
+  } else if (tipo === 'vias_entrega') {
+    html = `
+      <h3>Vías / Entregas / Mecanizados</h3>
+      <div class="grid">
+        <div class="field"><label>Inspector de Vía (Apellido)</label><input id="insp_ap" oninput="genViasEntrega()"></div>
+        <div class="field">
+          <label>Vía Entregada</label>
+          <select id="via" onchange="genViasEntrega()">
+            <option value="VÍA ASCENDENTE">VÍA ASCENDENTE</option>
+            <option value="VÍA DESCENDENTE">VÍA DESCENDENTE</option>
+            <option value="AMBAS VÍAS">AMBAS VÍAS</option>
+          </select>
+        </div>
+        <div class="field"><label>Estación Origen</label><input id="est_a" oninput="genViasEntrega()"></div>
+        <div class="field"><label>Estación Destino</label><input id="est_b" oninput="genViasEntrega()"></div>
+        <div class="field"><label>Consigna de Trabajo N°</label><input id="consigna" oninput="genViasEntrega()"></div>
+        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genViasEntrega()"></div>
+        <div class="field"><label>Apellido Infraestructura</label><input id="ap_infra" oninput="genViasEntrega()"></div>
+      </div>
+    `;
+  } else if (tipo === 'vias_devolucion') {
+    html = `
+      <h3>Recepción / Devolución de Vía</h3>
+      <div class="grid">
+        <div class="field"><label>Inspector que Devuelve</label><input id="insp_dev" oninput="genViasDevolucion()"></div>
+        <div class="field"><label>Inspector que Recibe</label><input id="insp_rec" oninput="genViasDevolucion()"></div>
+        <div class="field">
+          <label>Vía</label>
+          <select id="via" onchange="genViasDevolucion()">
+            <option value="VÍA ASCENDENTE">VÍA ASCENDENTE</option>
+            <option value="VÍA DESCENDENTE">VÍA DESCENDENTE</option>
+            <option value="AMBAS VÍAS">AMBAS VÍAS</option>
+          </select>
+        </div>
+        <div class="field"><label>Estación Origen</label><input id="est_a" oninput="genViasDevolucion()"></div>
+        <div class="field"><label>Estación Destino</label><input id="est_b" oninput="genViasDevolucion()"></div>
+        <div class="field">
+          <label>Condición</label>
+          <select id="condicion" onchange="toggleDevolucion(); genViasDevolucion();">
+            <option value="normal">CIRCULACIÓN NORMAL</option>
+            <option value="precaucion">CON PRECAUCIÓN</option>
+          </select>
+        </div>
+        <div class="field hidden" id="f_vel"><label>Velocidad (Km/h)</label><input id="vel" oninput="genViasDevolucion()"></div>
+        <div class="field hidden" id="f_motivo"><label>Motivo de Precaución</label><input id="motivo" oninput="genViasDevolucion()"></div>
+        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genViasDevolucion()"></div>
+        <div class="field"><label>Apellido Infraestructura</label><input id="ap_infra" oninput="genViasDevolucion()"></div>
+      </div>
+    `;
   }
 
-  function generar() {
-    const tipo = document.getElementById("tipoEvento").value;
-    const cfg = configuraciones[tipo];
-    const tren = document.getElementById("tren").value.trim() || "[TREN]";
-    const loc = document.getElementById("loc").value.trim() || "[LOC]";
-    const coches = document.getElementById("coches").value.trim();
-    const pers = document.getElementById("personal").value.trim() || "COND. [APELLIDO] ([LEG])";
-    const lugar = document.getElementById("lugar").value.trim() || "[LUGAR]";
-    const min = document.getElementById("minutos").value.trim();
-    const extra = document.getElementById("extra").value.trim();
+  mod.innerHTML = html;
+  setMeta('-', '-');
+  document.getElementById('novedadTexto').innerText = 'COMPLETE LOS CAMPOS PARA GENERAR LA NOVEDAD...';
+}
 
-    const cochesTxt = coches ? " (" + coches + ")" : "";
-    const minTxt = min ? " CON " + min + " MIN. ATRASO" : "";
-    const extraTxt = extra ? ". " + extra : "";
+function setSalida(texto, carga, avisos) {
+  document.getElementById('novedadTexto').innerText = texto;
+  setMeta(carga, avisos);
+}
 
-    let l1 = pers + " - T/" + tren + " LOC." + loc + cochesTxt;
-    let l2 = "";
-    let l3 = "";
+function setMeta(c, a) {
+  document.getElementById('metaInfo').innerText = `Carga: ${c} | Avisos: ${a}`;
+}
 
-    switch(tipo) {
-      case "ATS":
-        l2 = "INF. EN " + lugar + " APLICACIÓN DE A.T.S." + extraTxt + ". REPONE Y REANUDA" + minTxt + ".-";
-        l3 = "C/A: M. RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
-        break;
-      case "HV":
-        l2 = "INF. EN " + lugar + " APLICACIÓN DE HOMBRE VIVO" + extraTxt + ". REPONE Y REANUDA" + minTxt + ".-";
-        l3 = "C/A: MATERIAL RODANTE, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
-        break;
-      case "PRECAUCION":
-        l1 = "SUPERVISIÓN PCZ - T/" + tren + " LOC." + loc + cochesTxt;
-        l2 = "NOTIFICA PRECAUCIÓN EN " + lugar + extraTxt + ". REANUDA MARCHA.-";
-        l3 = "C/A: CONTROL, DIAGRAMA, SUPERVISIÓN CABECERA.-";
-        break;
-      case "FRENO":
-        l2 = "INF. EN " + lugar + " DETENCIÓN POR FORMACIÓN FRENADA" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-";
-        break;
-      case "TRACCION":
-        l2 = "INF. EN " + lugar + " PÉRDIDA DE MARCHA POR POCA POTENCIA/TRACCIÓN" + extraTxt + ". CONTINÚA" + minTxt + ".-";
-        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE (POR INFORME).-";
-        break;
-      case "CAMBIO_LOC":
-        l2 = "INF. EN " + lugar + " RECAMBIO DE UNIDAD TRACCIÓN" + extraTxt + ". CONTINÚA ROTACIÓN" + minTxt + ".-";
-        l3 = "C/A: MATERIAL RODANTE, DIAGRAMA, AUX. BOULOGNE.-";
-        break;
-      case "LUZ_PUERTA":
-        l2 = "INF. EN " + lugar + " ATENCIÓN DE MATERIAL RODANTE EN COCHES" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: MATERIAL RODANTE, AUX. BOULOGNE.-";
-        break;
-      case "CAIDA":
-        l2 = "INF. DETENIDO EN " + lugar + " POR PASAJERO QUE DESCENDIÓ EN MOVIMIENTO CAYENDO A PLATAFORMA" + extraTxt + ". REANUDA MARCHA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (INFORME Y ACTA).-";
-        break;
-      case "DESCOMP":
-        l2 = "INF. DETENIDO EN " + lugar + " POR PASAJERO DESCOMPUESTO A BORDO" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, SERVICIO MÉDICO, AUX. BOULOGNE (INFORME Y ACTA).-";
-        break;
-      case "POLICIA":
-        l2 = "INF. DETENIDO EN " + lugar + " POR INTERVENCIÓN POLICIAL A BORDO" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, POLICÍA FEDERAL / PROVINCIA, AUX. BOULOGNE.-";
-        break;
-      case "ARREBATO":
-        l2 = "INF. EN " + lugar + " ARREBATO DE PERTENENCIAS A PASAJERO" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, VIDEO MKS, POLICÍA FEDERAL, AUX. BOULOGNE.-";
-        break;
-      case "APEDREO":
-        l2 = "INF. EN " + lugar + " APEDREO A LA FORMACIÓN" + extraTxt + ". CONTINÚA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, VIDEO MKS, MATERIAL RODANTE, AUX. BOULOGNE.-";
-        break;
-      case "VIA":
-        l2 = "INF. EN " + lugar + " FRENO DE EMERGENCIA PREVENTIVO POR PERSONAS EN ZONA DE VÍAS" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, VIDEO MKS, AUX. BOULOGNE (POR INFORME).-";
-        break;
-      case "OBITO":
-        l2 = "INF. EN " + lugar + " ACCIDENTE DE PERSONA CON ÓBITO SOBRE VÍA" + extraTxt + ". VÍA OBSTRUIDA.-";
-        l3 = "C/A: LEGALES, RESGUARDO, SEG. OPERATIVA, SERVICIO MÉDICO, CIENTÍFICA.-";
-        break;
-      case "CABALLOS":
-        l2 = "INF. EN " + lugar + " ANIMALES EQUINOS EN ZONA DE VÍAS" + extraTxt + ". CIRCULA A LA VISTA.-";
-        l3 = "C/A: RESGUARDO, CONTROL DE TRÁFICO.-";
-        break;
-      case "CUSTODIA":
-        l2 = "INF. DEMORADO EN " + lugar + " POR FALTA DE CUSTODIA POLICIAL" + extraTxt + ". REANUDA" + minTxt + ".-";
-        l3 = "C/A: RESGUARDO, GUARDIA DE TRANSPORTE.-";
-        break;
-      case "PAN":
-        l2 = "INF. P.A.N. " + lugar + " NOVEDAD EN BARRERAS" + extraTxt + ". CIRCULA CON PRECAUCIÓN.-";
-        l3 = "C/A: SEÑALAMIENTO, RESGUARDO (PARA CUSTODIA).-";
-        break;
-      case "SENAL":
-        l2 = "INF. EN " + lugar + " FALLA DE SEÑALAMIENTO / CIRCUITO OCUPADO" + extraTxt + ". FRANQUEA A PELIGRO" + minTxt + ".-";
-        l3 = "C/A: SEÑALAMIENTO, SUPERVISIÓN RETIRO / BOULOGNE.-";
-        break;
-      case "CAMBIO_ADV":
-        l2 = "INF. EN " + lugar + " APARATO DE VÍA FUERA DE CORRESPONDENCIA" + extraTxt + ". MANIOBRA MANUAL" + minTxt + ".-";
-        l3 = "C/A: SEÑALAMIENTO, GUARDIA DE VÍA, SUPERVISIÓN.-";
-        break;
-      case "OBRA":
-        l1 = "INSP. VÍA Y OBRAS - SECTOR " + lugar;
-        l2 = "ENTREGA / RECEPCIÓN DE VÍA SEGÚN CONSIGNA" + extraTxt + ".-";
-        l3 = "C/A: GUARDIA DE VÍA, RESGUARDO, CONTROL CIRCULACIÓN.-";
-        break;
+function itemAviso(nom, cargo) {
+  return nom ? `- ${cargo} ${nom}` : `- ${cargo}`;
+}
+
+function formatearCA(arr) {
+  const filtrados = arr.filter(x => x && x.trim() !== '');
+  if (filtrados.length === 0) return '';
+  return `C/A: ${filtrados.join(', ')}.-`;
+}
+
+// 1. Accidente
+function genAccidente() {
+  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const desc = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${val('tipo_acc')} DE PERSONA EN ZONA DE VÍAS. ${val('obstruccion')}. FORMACIÓN DETENIDA A LA ESPERA DE SERVICIOS DE EMERGENCIA Y POLICÍA.-`;
+  
+  const avisos = [
+    itemAviso(val('av_guardia'), 'GUARDIA TRANSPORTE'),
+    itemAviso(val('av_benaglia'), 'DR. BENAGLIA'),
+    itemAviso(val('av_seguridad'), 'SEGURIDAD'),
+    itemAviso(val('av_coord'), 'COORD. ESTACIÓN'),
+    itemAviso(val('av_jefetrans'), 'JEFE TRANSPORTE'),
+    itemAviso(val('av_jefecirc'), 'JEFE CIRCULACIÓN'),
+    itemAviso(val('av_legales'), 'DEPTO. LEGALES'),
+    itemAviso(val('av_traccion'), 'JEFE TRACCIÓN'),
+    itemAviso(val('av_resguardo'), 'JEFE RESGUARDO'),
+    itemAviso(val('av_pasajero'), 'ATENCIÓN AL PASAJERO'),
+    itemAviso(val('av_psicologa'), 'PSICÓLOGA'),
+    itemAviso(val('av_video'), 'VIDEO'),
+    itemAviso(val('av_deposito'), 'DEPÓSITO'),
+    itemAviso(val('av_senalamiento'), 'SEÑALAMIENTO'),
+    `- SUP. ${val('av_boulogne')} EST. BOULOGNE (POR INFORME).-`
+  ].join('\n');
+
+  setSalida(`${cond}\n${desc}\nCON AVISOS A:\n${avisos}`, '80', '1-2-6-7-8-9-10-11-12-13-14-15-16-17 + SUP');
+}
+
+// 2. ATS
+function genATS() {
+  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const cuerpo = `INF. EN ${val('lugar')} DISPLAY DE A.T.S. PRESENTA 3 LÍNEAS. PROCEDE A CORTAR PRECINTO N° ${val('precinto')}. REANUDA MARCHA CON ${val('atraso')} MIN. ATRASO.-`;
+  const ca = formatearCA([
+    val('ap_mr') ? `${val('ap_mr')} MAT. RODANTE` : 'MAT. RODANTE',
+    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
+  ]);
+  setSalida(`${cond}\n${cuerpo}\n${ca}`, '801', 'MR, SUP');
+}
+
+// 3. Animales / Personas
+function genVias(tipo) {
+  const esAnimal = tipo === 'animales';
+  const sujeto = esAnimal ? 'ANIMALES EN ZONA DE VÍAS' : 'PERSONA EN ZONA DE VÍAS';
+  const din = document.getElementById('dinamica').value;
+  const fAtraso = document.getElementById('f_atraso');
+  
+  let cuerpo = '';
+  if (din === 'freno') {
+    if (fAtraso) fAtraso.classList.remove('hidden');
+    cuerpo = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${sujeto}. SIN CONSECUENCIAS. REANUDA MARCHA CON ${val('atraso')} MIN. ATRASO.-`;
+  } else {
+    if (fAtraso) fAtraso.classList.add('hidden');
+    cuerpo = `INF. QUE AL PASO POR ${val('lugar')} OBSERVA ${sujeto}.-`;
+  }
+
+  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const ca = formatearCA([
+    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
+  ]);
+  setSalida(`${cond}\n${cuerpo}\n${ca}`, '78', 'RESGUARDO, SUP');
+}
+
+// 4. Barrera
+function genBarrera() {
+  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const plural = val('brazo').includes('AMBOS');
+  let est = val('estado');
+  if (plural && !est.endsWith('S')) est += 'S';
+
+  const cuerpo = `INF. QUE AL PASO POR P. a N. ${val('pan_nom')} Km ${val('pan_km')} ${val('brazo')} SE ENCUENTRA${plural ? 'N' : ''} ${est}.-`;
+  const ca = formatearCA([
+    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO'
+  ]);
+  setSalida(`${cond}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, SEÑALAMIENTO');
+}
+
+// 5. Circuito / Señal
+function toggleCircuito() {
+  const orig = document.getElementById('origen').value;
+  document.getElementById('bloque_sup').classList.toggle('hidden', orig !== 'sup');
+  document.getElementById('bloque_cond').classList.toggle('hidden', orig !== 'cond');
+}
+
+function toggleBarrerasCirc() {
+  const afecta = document.getElementById('afecta_barreras').value === 'si';
+  document.getElementById('f_pan_nom').classList.toggle('hidden', !afecta);
+  document.getElementById('f_pan_km').classList.toggle('hidden', !afecta);
+  document.getElementById('f_pan_est').classList.toggle('hidden', !afecta);
+}
+
+function genCircuito() {
+  const orig = document.getElementById('origen').value;
+  let cabecera = '';
+  let cuerpo = '';
+  let caArr = [];
+
+  if (orig === 'sup') {
+    cabecera = `SUP. ${val('sup_ap')} EST. ${val('estacion')}`;
+    const afecta = document.getElementById('afecta_barreras').value === 'si';
+    if (!afecta) {
+      cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. SIN AFECTACIÓN DE BARRERAS.-`;
+    } else {
+      cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. EN P. a N. ${val('pan_nom_c')} Km ${val('pan_km_c')} BARRERAS ${val('pan_estado_c')}.-`;
+      caArr.push(val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO');
     }
-
-    l2 = l2.replace(/\.\./g, ".");
-
-    const bloqueFinal = [
-      l1,
-      l2,
-      l3,
-      "",
-      "[CARGA: " + cfg.carga + " | AVISOS: " + cfg.avisos + "]"
-    ];
-
-    document.getElementById("salidaTexto").value = bloqueFinal.join("\n");
+    caArr.unshift(val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO');
+  } else {
+    cabecera = `COND. ${val('cond_ap_c')} (${val('cond_leg_c')}) - T/${val('tren_c')} LOC.${val('loc_c')} (${val('coches_c')})`;
+    cuerpo = `INF. QUE AL PASO POR ${val('lugar_c')} SEÑAL ${val('senal_id')} SE ENCUENTRA ${val('estado_senal')}.-`;
+    caArr.push(val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO');
   }
 
-  function copiarAlPortapapeles() {
-    const area = document.getElementById("salidaTexto");
-    area.select();
-    area.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(area.value).then(function() {
-      alert("✅ ¡Copiado al portapapeles listo para pegar!");
-    });
-  }
+  setSalida(`${cabecera}\n${cuerpo}\n${formatearCA(caArr)}`, 'VARIOS', 'SEÑALAMIENTO (Y RESGUARDO)');
+}
 
-  actualizarPlantilla();
+// 6. Cambio FC
+function genCambioFC() {
+  const cab = `SUP. ${val('sup_ap')} EST. ${val('estacion')}`;
+  const cuerpo = `INF. CAMBIO ${val('cambio_id')} FUERA DE CORRESPONDENCIA EN POSICIÓN ${val('posicion')}.-`;
+  const ca = formatearCA([val('ap_sen') ? `${val('ap_sen')} SEÑALAMIENTO` : 'SEÑALAMIENTO']);
+  setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'SEÑALAMIENTO');
+}
+
+// 7. Falta de Custodia
+function genCustodia() {
+  const cab = `GUARDATRÉN ${val('guarda_ap')} (${val('guarda_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const res = document.getElementById('resolucion').value;
+  let fin = res === 'sin_custodia' ? 'CIRCULA SIN CUSTODIA.-' : 'TRAS HACERSE PRESENTE PERSONAL POLICIAL, FORMACIÓN ESTUVO DETENIDA DICHO TIEMPO.-';
+  
+  const cuerpo = `INF. EN EST. ${val('lugar')} DEMORA POR FALTA DE CUSTODIA POLICIAL A BORDO. FORMACIÓN ESTUVO DETENIDA ${val('minutos')} MIN. EN DICHA ESTACIÓN. ${fin}`;
+  const ca = formatearCA([
+    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
+  ]);
+  setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, SUP');
+}
+
+// 8. Vias Entrega
+function genViasEntrega() {
+  const cab = `INSP. DE VÍA ${val('insp_ap')}`;
+  const cuerpo = `ENTREGA ${val('via')} ENTRE ESTACIONES ${val('est_a')} Y ${val('est_b')} PARA TRABAJOS DE MECANIZADO, SEGÚN CONSIGNA DE TRABAJO ${val('consigna')}.-`;
+  const ca = formatearCA([
+    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    val('ap_infra') ? `${val('ap_infra')} INFRAESTRUCTURA` : 'INFRAESTRUCTURA'
+  ]);
+  setSalida(`${cab}\n${cuerpo}\n${ca}`, 'VARIOS', 'RESGUARDO, INFRAESTRUCTURA');
+}
+
+// 9. Vias Devolucion
+function toggleDevolucion() {
+  const esPrec = document.getElementById('condicion').value === 'precaucion';
+  document.getElementById('f_vel').classList.toggle('hidden', !esPrec);
+  document.getElementById('f_motivo').classList.toggle('hidden', !esPrec);
+}
+
+function genViasDevolucion() {
+  const cab = `INSP. ${val('insp_dev')} DEVUELVE LA CIRCULACIÓN DE ${val('via')} ENTRE ESTACIONES ${val('est_a')} Y ${val('est_b')} AL INSP. ${val('insp_rec')}.`;
+  const esPrec = document.getElementById('condicion').value === 'precaucion';
+  const condTxt = esPrec
+    ? `CIRCULACIÓN CON PRECAUCIÓN A ${val('vel')} KM/H POR ${val('via')} DEBIDO A ${val('motivo')}.-`
+    : 'CIRCULACIÓN NORMAL POR EL SECTOR.-';
+  
+  const ca = formatearCA([
+    val('ap_resg') ? `${val('ap_resg')} RESGUARDO` : 'RESGUARDO',
+    val('ap_infra') ? `${val('ap_infra')} INFRAESTRUCTURA` : 'INFRAESTRUCTURA'
+  ]);
+  setSalida(`${cab} ${condTxt}\n${ca}`, 'VARIOS', 'RESGUARDO, INFRAESTRUCTURA');
+}
+
+function copiarNovedad() {
+  const txt = document.getElementById('novedadTexto').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert('Novedad limpia copiada al portapapeles.');
+  });
+}
+
+function limpiarTodo() {
+  renderModulo();
+}
+
+window.onload = renderModulo;
 </script>
-
 </body>
 </html>
