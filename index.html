@@ -54,8 +54,8 @@
       <div class="field full-width">
         <label>Tipo de Novedad Operativa</label>
         <select id="tipoNovedad" onchange="renderModulo()">
-          <option value="ats">A.T.S. (Carga 801)</option>
           <option value="barrera">Falla / Rotura de Barrera P. a N. (Carga 70)</option>
+          <option value="ats">A.T.S. (Carga 801)</option>
           <option value="circuito_senal">Falla de Señal / Circuito Ocupado (Carga 72)</option>
           <option value="cambio_fc">Cambio Fuera de Correspondencia (Carga 73)</option>
           <option value="vias_entrega">Vías / Entregas / Mecanizados (Carga 74)</option>
@@ -99,7 +99,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-// Límite estricto de 69 caracteres por línea preservando palabras
 function wrapText69(texto) {
   const lineas = texto.split('\n');
   const salida = [];
@@ -147,9 +146,45 @@ function renderModulo() {
   const mod = document.getElementById('moduloDinamico');
   let html = '';
 
-  if (tipo === 'ats') {
+  if (tipo === 'barrera') {
     html = `
-      <h3>Falla / Aplicación de A.T.S.</h3>
+      <h3>Falla / Rotura de Barrera en P. a N. (Carga 70)</h3>
+      <div class="grid">
+        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genBarrera()"></div>
+        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genBarrera()"></div>
+        <div class="field"><label>Tren</label><input id="tren" oninput="genBarrera()"></div>
+        <div class="field"><label>Locomotora</label><input id="loc" oninput="genBarrera()"></div>
+        <div class="field"><label>Coches</label><input id="coches" placeholder="ej. 5 COCHES" oninput="genBarrera()"></div>
+        <div class="field"><label>Nombre P. a N.</label><input id="pan_nom" placeholder="ej. BOGADO" oninput="genBarrera()"></div>
+        <div class="field"><label>Kilometraje (Km)</label><input id="pan_km" placeholder="ej. 21/400" oninput="genBarrera()"></div>
+        <div class="field">
+          <label>Brazo Afectado</label>
+          <select id="brazo" onchange="genBarrera()">
+            <option value="BRAZO ASCENDENTE">BRAZO ASCENDENTE</option>
+            <option value="BRAZO DESCENDENTE">BRAZO DESCENDENTE</option>
+            <option value="AMBOS BRAZOS">AMBOS BRAZOS</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estado</label>
+          <select id="estado" onchange="genBarrera()">
+            <option value="ROTO">ROTO / S</option>
+            <option value="BAJO">BAJO / S</option>
+            <option value="SEMILEVANTADO">SEMILEVANTADO / S</option>
+          </select>
+        </div>
+      </div>
+      <h3>Avisos Reglamentarios (Apellido)</h3>
+      <div class="grid">
+        <div class="field"><label>1. Circulación</label><input id="av_circ" oninput="genBarrera()"></div>
+        <div class="field"><label>2. Tracción</label><input id="av_trac" oninput="genBarrera()"></div>
+        <div class="field"><label>3. Estaciones</label><input id="av_est" oninput="genBarrera()"></div>
+        <div class="field"><label>4. Señalamiento</label><input id="av_sen" oninput="genBarrera()"></div>
+      </div>
+    `;
+  } else if (tipo === 'ats') {
+    html = `
+      <h3>Falla / Aplicación de A.T.S. (Carga 801)</h3>
       <div class="grid">
         <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genATS()"></div>
         <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genATS()"></div>
@@ -181,40 +216,9 @@ function renderModulo() {
         <div class="field"><label>Apellido Sup. Por Informes</label><input id="ap_sup" oninput="genATS()"></div>
       </div>
     `;
-  } else if (tipo === 'barrera') {
-    html = `
-      <h3>Falla / Rotura de Barrera en P. a N.</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genBarrera()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genBarrera()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genBarrera()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genBarrera()"></div>
-        <div class="field"><label>Coches</label><input id="coches" oninput="genBarrera()"></div>
-        <div class="field"><label>Nombre P. a N.</label><input id="pan_nom" placeholder="ej. BOGADO" oninput="genBarrera()"></div>
-        <div class="field"><label>Kilometraje (Km)</label><input id="pan_km" placeholder="ej. 21/400" oninput="genBarrera()"></div>
-        <div class="field">
-          <label>Brazo Afectado</label>
-          <select id="brazo" onchange="genBarrera()">
-            <option value="BRAZO ASCENDENTE">BRAZO ASCENDENTE</option>
-            <option value="BRAZO DESCENDENTE">BRAZO DESCENDENTE</option>
-            <option value="AMBOS BRAZOS">AMBOS BRAZOS</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Estado</label>
-          <select id="estado" onchange="genBarrera()">
-            <option value="ROTO">ROTO / S</option>
-            <option value="BAJO">BAJO / S</option>
-            <option value="SEMILEVANTADO">SEMILEVANTADO / S</option>
-          </select>
-        </div>
-        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genBarrera()"></div>
-        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genBarrera()"></div>
-      </div>
-    `;
   } else if (tipo === 'circuito_senal') {
     html = `
-      <h3>Falla de Señal / Circuito Ocupado</h3>
+      <h3>Falla de Señal / Circuito Ocupado (Carga 72)</h3>
       <div class="grid">
         <div class="field full-width">
           <label>Origen del Aviso</label>
@@ -272,7 +276,7 @@ function renderModulo() {
     `;
   } else if (tipo === 'cambio_fc') {
     html = `
-      <h3>Cambio Fuera de Correspondencia</h3>
+      <h3>Cambio Fuera de Correspondencia (Carga 73)</h3>
       <div class="grid">
         <div class="field"><label>Supervisor (Apellido)</label><input id="sup_ap" oninput="genCambioFC()"></div>
         <div class="field"><label>Estación</label><input id="estacion" oninput="genCambioFC()"></div>
@@ -290,7 +294,7 @@ function renderModulo() {
     `;
   } else if (tipo === 'vias_entrega') {
     html = `
-      <h3>Vías / Entregas / Mecanizados</h3>
+      <h3>Vías / Entregas / Mecanizados (Carga 74)</h3>
       <div class="grid">
         <div class="field"><label>Inspector de Vía (Apellido)</label><input id="insp_ap" oninput="genViasEntrega()"></div>
         <div class="field">
@@ -310,7 +314,7 @@ function renderModulo() {
     `;
   } else if (tipo === 'vias_devolucion') {
     html = `
-      <h3>Recepción / Devolución de Vía</h3>
+      <h3>Recepción / Devolución de Vía (Carga 74)</h3>
       <div class="grid">
         <div class="field"><label>Inspector que Devuelve</label><input id="insp_dev" oninput="genViasDevolucion()"></div>
         <div class="field"><label>Inspector que Recibe</label><input id="insp_rec" oninput="genViasDevolucion()"></div>
@@ -339,7 +343,7 @@ function renderModulo() {
     `;
   } else if (tipo === 'accidente') {
     html = `
-      <h3>Accidente de Persona</h3>
+      <h3>Accidente de Persona (Carga 80)</h3>
       <div class="grid">
         <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genAccidente()"></div>
         <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genAccidente()"></div>
@@ -378,7 +382,7 @@ function renderModulo() {
   } else if (tipo === 'persona_vias' || tipo === 'animales') {
     const esAnimal = tipo === 'animales';
     html = `
-      <h3>${esAnimal ? 'Animales en Zona de Vías' : 'Persona en Zona de Vías'}</h3>
+      <h3>${esAnimal ? 'Animales en Zona de Vías' : 'Persona en Zona de Vías'} (Carga 78)</h3>
       <div class="grid">
         <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genVias('${tipo}')"></div>
         <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genVias('${tipo}')"></div>
@@ -400,7 +404,7 @@ function renderModulo() {
     `;
   } else if (tipo === 'custodia') {
     html = `
-      <h3>Falta de Custodia Policial</h3>
+      <h3>Falta de Custodia Policial (Carga 78)</h3>
       <div class="grid">
         <div class="field"><label>Guardatrén (Apellido)</label><input id="guarda_ap" oninput="genCustodia()"></div>
         <div class="field"><label>Legajo</label><input id="guarda_leg" oninput="genCustodia()"></div>
@@ -426,9 +430,33 @@ function renderModulo() {
   document.getElementById('novedadTexto').innerText = 'COMPLETE LOS CAMPOS PARA GENERAR LA NOVEDAD...';
   document.getElementById('metaCarga').innerText = '-';
   document.getElementById('metaAvisos').innerText = '-';
+  if (tipo === 'barrera') genBarrera();
 }
 
-// 1. ATS
+// 1. BARRERA (1 Circulación, 2 Tracción, 3 Estaciones, 4 Señalamiento)
+function genBarrera() {
+  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
+  const plural = val('brazo').includes('AMBOS');
+  let est = val('estado');
+  if (plural && !est.endsWith('S')) est += 'S';
+
+  const cuerpo = `INF. QUE AL PASO POR P. a N. ${val('pan_nom')} Km ${val('pan_km')} ${val('brazo')} SE ENCUENTRA${plural ? 'N' : ''} ${est}.-`;
+  
+  function itemAv(valItem, cargo, num) {
+    return valItem ? `${num} ${cargo} ${valItem}` : `${num} ${cargo}`;
+  }
+
+  const avisos = [
+    itemAv(val('av_circ'), 'CIRCULACIÓN', '1'),
+    itemAv(val('av_trac'), 'TRACCIÓN', '2'),
+    itemAv(val('av_est'), 'ESTACIONES', '3'),
+    itemAv(val('av_sen'), 'SEÑALAMIENTO', '4')
+  ].join('\n');
+
+  setSalida(`${cond}\n${cuerpo}\nCON AVISOS A:\n${avisos}.-`, '70', '1-2-3-4');
+}
+
+// 2. ATS (Flujo de reposición y corte)
 function toggleAtsInputs() {
   const modo = document.getElementById('res_ats').value;
   const fPrec = document.getElementById('f_precinto');
@@ -457,21 +485,6 @@ function genATS() {
   if (val('ap_sup')) avisos.push(`SUP. ${val('ap_sup')} POR INFORMES.-`);
 
   setSalida(`${cond}\n${cuerpo}\n${avisos.join('\n')}`, '801', '2-15-19');
-}
-
-// 2. BARRERA
-function genBarrera() {
-  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const plural = val('brazo').includes('AMBOS');
-  let est = val('estado');
-  if (plural && !est.endsWith('S')) est += 'S';
-
-  const cuerpo = `INF. QUE AL PASO POR P. a N. ${val('pan_nom')} Km ${val('pan_km')} ${val('brazo')} SE ENCUENTRA${plural ? 'N' : ''} ${est}.-`;
-  const ca = formatearCA([
-    buildAviso(val('ap_resg'), 'RESGUARDO'),
-    buildAviso(val('ap_sen'), 'SEÑALAMIENTO')
-  ]);
-  setSalida(`${cond}\n${cuerpo}\n${ca}`, '70', '12-17');
 }
 
 // 3. CIRCUITO / SEÑAL
