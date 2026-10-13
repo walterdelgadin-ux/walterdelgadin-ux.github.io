@@ -1,11 +1,11 @@
 <a_file_is_created>
-  
+  <file_name>presupuesto_moderno_pro.html</file_name>
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto.-</title>
+    <title>Presupuesto Noviembre 2026 - Ultra Modern Pro</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -14,7 +14,6 @@
             --primary-accent: #6366f1;
             --primary-glow: rgba(99, 102, 241, 0.35);
             --success-color: #10b981;
-            --success-glow: rgba(16, 185, 129, 0.25);
             --danger-color: #f43f5e;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
@@ -42,11 +41,12 @@
         .container {
             max-width: 480px;
             margin: 0 auto;
+            padding-bottom: 30px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             padding-top: 8px;
         }
 
@@ -65,6 +65,51 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.1em;
+        }
+
+        /* Barra de Herramientas (Guardar y Deshacer) */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tool-btn {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 0.82em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .tool-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .tool-btn:not(:disabled):active {
+            transform: scale(0.96);
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-accent);
+        }
+
+        .tool-btn.save-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
+        }
+
+        .tool-btn.save-btn:active {
+            background: var(--success-color);
+            color: #000;
         }
 
         /* Dashboards Cards Neo-Glass */
@@ -236,15 +281,48 @@
             color: var(--danger-color);
             background: rgba(244, 63, 94, 0.15);
         }
+
+        /* Toast de confirmación */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(16, 185, 129, 0.9);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>PRESUPUESTO.-</h1>
+        <h1>Noviembre 2026</h1>
         <span class="subtitle">Finanzas Personales</span>
     </header>
+
+    <!-- Barra de Acciones (Deshacer y Guardar) -->
+    <div class="toolbar">
+        <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
+            ↩ Volver atrás
+        </button>
+        <button class="tool-btn save-btn" onclick="saveData()">
+            💾 Guardar cambios
+        </button>
+    </div>
 
     <!-- Dashboard de Indicadores Principal -->
     <div class="summary-dashboard">
@@ -268,23 +346,7 @@
             <span class="section-title">Ingresos</span>
             <button class="add-btn" onclick="addRow('income-list')">+ Nuevo</button>
         </div>
-        <div id="income-list" class="item-list">
-            <div class="item-row">
-                <input type="text" value="Sueldo Neto Base Promedio">
-                <input type="number" class="income-value" value="2771500" oninput="calculate()">
-                <button class="delete-btn" onclick="removeRow(this)">×</button>
-            </div>
-            <div class="item-row">
-                <input type="text" value="Recupero Préstamo U.F.">
-                <input type="number" class="income-value" value="232333.33" oninput="calculate()">
-                <button class="delete-btn" onclick="removeRow(this)">×</button>
-            </div>
-            <div class="item-row">
-                <input type="text" value="Feriado Trabajado">
-                <input type="number" class="income-value" value="108500" oninput="calculate()">
-                <button class="delete-btn" onclick="removeRow(this)">×</button>
-            </div>
-        </div>
+        <div id="income-list" class="item-list"></div>
     </section>
 
     <!-- SECCIÓN GASTOS -->
@@ -293,32 +355,126 @@
             <span class="section-title">Gastos y Servicios</span>
             <button class="add-btn" onclick="addRow('expense-list')">+ Nuevo</button>
         </div>
-        <div id="expense-list" class="item-list">
-            <div class="item-row"><input type="text" value="Crédicoop"><input type="number" class="expense-value" value="1050000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="200 FIJO"><input type="number" class="expense-value" value="200000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Giyo ($150k/sem)"><input type="number" class="expense-value" value="600000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Granja / Verdulería"><input type="number" class="expense-value" value="250000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Flow"><input type="number" class="expense-value" value="216324" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Edesur (Luz)"><input type="number" class="expense-value" value="94570.28" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Metrogas (Gas)"><input type="number" class="expense-value" value="74139.23" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Personal Móvil"><input type="number" class="expense-value" value="36160" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Movistar Joel"><input type="number" class="expense-value" value="28573.40" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Movistar Giyo"><input type="number" class="expense-value" value="15002.23" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Transporte"><input type="number" class="expense-value" value="75000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Toco y me Voy"><input type="number" class="expense-value" value="38000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Xbox"><input type="number" class="expense-value" value="24902.79" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="YouTube"><input type="number" class="expense-value" value="13515.28" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Spotify"><input type="number" class="expense-value" value="9984.22" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Crunchyroll"><input type="number" class="expense-value" value="9209.49" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Prime Video"><input type="number" class="expense-value" value="7863.79" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-            <div class="item-row"><input type="text" value="Meli+"><input type="number" class="expense-value" value="5490" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
-        </div>
+        <div id="expense-list" class="item-list"></div>
     </section>
 </div>
 
+<div id="toast" class="toast">✓ Datos guardados localmente</div>
+
 <script>
+    // Datos por defecto
+    const defaultData = {
+        incomes: [
+            { text: "Sueldo Neto Base Promedio", val: 2771500 },
+            { text: "Recupero Préstamo U.F.", val: 232333.33 },
+            { text: "Feriado Trabajado", val: 108500 }
+        ],
+        expenses: [
+            { text: "Crédito 1", val: 1050000 },
+            { text: "Crédito 2", val: 200000 },
+            { text: "Supermercado ($200k/sem)", val: 800000 },
+            { text: "Carnicería / Verdulería", val: 250000 },
+            { text: "Personal Internet + Flow", val: 216324 },
+            { text: "Edesur (Luz)", val: 94570.28 },
+            { text: "Metrogas (Gas)", val: 74139.23 },
+            { text: "Personal Móvil", val: 36160 },
+            { text: "Movistar Compra", val: 28573.40 },
+            { text: "Movistar Móvil", val: 15002.23 },
+            { text: "Transporte", val: 75000 },
+            { text: "Deportes", val: 38000 },
+            { text: "Xbox", val: 24902.79 },
+            { text: "YouTube", val: 13515.28 },
+            { text: "Spotify", val: 9984.22 },
+            { text: "Crunchyroll", val: 9209.49 },
+            { text: "Prime Video", val: 7863.79 },
+            { text: "Meli+", val: 5490 }
+        ]
+    };
+
+    let historyStack = [];
+
+    // Formateador de moneda
     function formatCurrency(val) {
         return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(val);
+    }
+
+    // Captura el estado actual antes de un cambio
+    function pushState() {
+        const state = getCurrentData();
+        historyStack.push(JSON.stringify(state));
+        document.getElementById('undo-btn').disabled = false;
+    }
+
+    // Deshacer la última acción
+    function undo() {
+        if (historyStack.length > 0) {
+            const previousState = JSON.parse(historyStack.pop());
+            renderData(previousState);
+            calculate();
+            if (historyStack.length === 0) {
+                document.getElementById('undo-btn').disabled = true;
+            }
+        }
+    }
+
+    // Obtener los datos actualmente visibles en pantalla
+    function getCurrentData() {
+        const incomes = [];
+        document.querySelectorAll('#income-list .item-row').forEach(row => {
+            incomes.push({
+                text: row.querySelector('input[type="text"]').value,
+                val: parseFloat(row.querySelector('input[type="number"]').value) || 0
+            });
+        });
+
+        const expenses = [];
+        document.querySelectorAll('#expense-list .item-row').forEach(row => {
+            expenses.push({
+                text: row.querySelector('input[type="text"]').value,
+                val: parseFloat(row.querySelector('input[type="number"]').value) || 0
+            });
+        });
+
+        return { incomes, expenses };
+    }
+
+    // Renderizar una lista de datos en el DOM
+    function renderData(data) {
+        const incomeList = document.getElementById('income-list');
+        const expenseList = document.getElementById('expense-list');
+        
+        incomeList.innerHTML = '';
+        expenseList.innerHTML = '';
+
+        data.incomes.forEach(item => incomeList.appendChild(createRow(item.text, item.val, 'income-value')));
+        data.expenses.forEach(item => expenseList.appendChild(createRow(item.text, item.val, 'expense-value')));
+    }
+
+    // Crear un elemento de fila
+    function createRow(text, val, valueClass) {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+            <input type="text" value="${text}" onfocus="pushState()" onchange="calculate()">
+            <input type="number" class="${valueClass}" value="${val}" onfocus="pushState()" oninput="calculate()">
+            <button class="delete-btn" onclick="removeRow(this)">×</button>
+        `;
+        return row;
+    }
+
+    function addRow(containerId) {
+        pushState();
+        const container = document.getElementById(containerId);
+        const isIncome = containerId === 'income-list';
+        const valueClass = isIncome ? 'income-value' : 'expense-value';
+        container.appendChild(createRow('', 0, valueClass));
+        calculate();
+    }
+
+    function removeRow(btn) {
+        pushState();
+        btn.parentElement.remove();
+        calculate();
     }
 
     function calculate() {
@@ -337,32 +493,35 @@
 
         document.getElementById('total-income').innerText = formatCurrency(totalIncome);
         document.getElementById('total-expenses').innerText = formatCurrency(totalExpense);
+        document.getElementById('net-balance').innerText = formatCurrency(balance);
+    }
+
+    // Guardar información en LocalStorage
+    function saveData() {
+        const data = getCurrentData();
+        localStorage.setItem('presupuesto_data', JSON.stringify(data));
         
-        const balanceEl = document.getElementById('net-balance');
-        balanceEl.innerText = formatCurrency(balance);
+        const toast = document.getElementById('toast');
+        toast.className = 'toast show';
+        setTimeout(() => toast.className = 'toast', 2000);
     }
 
-    function addRow(containerId) {
-        const container = document.getElementById(containerId);
-        const isIncome = containerId === 'income-list';
-        const valueClass = isIncome ? 'income-value' : 'expense-value';
-
-        const row = document.createElement('div');
-        row.className = 'item-row';
-        row.innerHTML = `
-            <input type="text" placeholder="Nuevo concepto">
-            <input type="number" class="${valueClass}" value="0" oninput="calculate()">
-            <button class="delete-btn" onclick="removeRow(this)">×</button>
-        `;
-        container.appendChild(row);
-    }
-
-    function removeRow(btn) {
-        btn.parentElement.remove();
+    // Cargar información al iniciar
+    function loadData() {
+        const saved = localStorage.getItem('presupuesto_data');
+        if (saved) {
+            try {
+                renderData(JSON.parse(saved));
+            } catch(e) {
+                renderData(defaultData);
+            }
+        } else {
+            renderData(defaultData);
+        }
         calculate();
     }
 
-    calculate();
+    loadData();
 </script>
 
 </body>
