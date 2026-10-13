@@ -1,655 +1,371 @@
-<!DOCTYPE html>
+<a_file_is_created>
+  <file_name>presupuesto_moderno_dark.html</file_name>
+  <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Registro Operativo Ferroviario</title>
-  <style>
-    :root {
-      --bg: #0f1117;
-      --card-bg: #181b24;
-      --border: #282f3d;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --meta-bg: #1e293b;
-      --meta-text: #38bdf8;
-      --meta-border: #0284c7;
-      --success: #10b981;
-      --danger: #ef4444;
-      --danger-hover: #dc2626;
-    }
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; }
-    body { background-color: var(--bg); color: var(--text); padding: 12px; margin: 0; display: flex; justify-content: center; }
-    .container { width: 100%; max-width: 920px; display: flex; flex-direction: column; gap: 12px; }
-    .card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
-    h2 { margin: 0 0 10px 0; color: #fff; font-size: 1.05rem; letter-spacing: 0.5px; }
-    h3 { margin: 12px 0 8px 0; color: #cbd5e1; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
-    .full-width { grid-column: 1 / -1; }
-    .field { display: flex; flex-direction: column; gap: 3px; }
-    label { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-    input, select, textarea { background-color: #0b0d13; border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 5px; font-size: 0.88rem; transition: border-color 0.15s; }
-    input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; }
-    .meta-panel { display: flex; gap: 12px; background-color: var(--meta-bg); border-left: 4px solid var(--meta-border); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; color: var(--meta-text); align-items: center; }
-    .meta-tag { background: #0b0d13; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); color: #fff; }
-    .output-box { background-color: #060709; border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: "Courier New", Courier, monospace; font-size: 0.92rem; color: #38bdf8; min-height: 120px; white-space: pre; overflow-x: auto; line-height: 1.4; }
-    .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-    button { background-color: var(--accent); color: #fff; border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    button:hover { background-color: var(--accent-hover); }
-    button.btn-clear { background-color: var(--danger); }
-    button.btn-clear:hover { background-color: var(--danger-hover); }
-    .hidden { display: none !important; }
-    .toast { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: #fff; padding: 10px 16px; border-radius: 6px; font-weight: bold; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 100; font-size: 0.85rem; }
-    .toast.show { opacity: 1; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto Noviembre 2026 - Ultra Modern</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 28, 45, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary-accent: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --success-color: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.25);
+            --danger-color: #f43f5e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --input-bg: rgba(15, 23, 42, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-top: 8px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 4px 0;
+        }
+
+        .subtitle {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Dashboards Cards Neo-Glass */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .summary-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: left;
+        }
+
+        .metric-card.full-width {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .metric-label {
+            font-size: 0.72em;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .metric-value.income { color: var(--success-color); }
+        .metric-value.expense { color: var(--danger-color); }
+        .metric-value.balance { 
+            color: #ffffff; 
+            font-size: 1.6em;
+            background: linear-gradient(135deg, #ffffff 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 0 4px;
+        }
+
+        .section-title {
+            font-size: 0.95em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary-accent);
+            box-shadow: 0 0 8px var(--primary-accent);
+        }
+
+        .add-btn {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-accent);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 0.78em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+            background: var(--primary-accent);
+            color: #fff;
+        }
+
+        /* Modern List Inputs */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 4px 6px 4px 12px;
+        }
+
+        .item-row:focus-within {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 12px var(--primary-glow);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .item-row input[type="text"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.88em;
+            font-weight: 500;
+            outline: none;
+        }
+
+        .item-row input[type="number"] {
+            width: 110px;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9em;
+            font-weight: 700;
+            text-align: right;
+            outline: none;
+            font-family: monospace;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: rgba(244, 63, 94, 0.4);
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .delete-btn:active {
+            color: var(--danger-color);
+            background: rgba(244, 63, 94, 0.15);
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="card">
-    <h2>SISTEMA DE REGISTRO OPERATIVO FERROVIARIO</h2>
-    <div class="grid">
-      <div class="field full-width">
-        <label>Tipo de Novedad Operativa</label>
-        <select id="tipoNovedad" onchange="renderModulo()">
-          <option value="barrera">Falla / Rotura de Barrera P. a N. (Carga 70)</option>
-          <option value="ats">A.T.S. (Carga 801)</option>
-          <option value="circuito_senal">Falla de Señal / Circuito Ocupado (Carga 72)</option>
-          <option value="cambio_fc">Cambio Fuera de Correspondencia (Carga 73)</option>
-          <option value="vias_entrega">Vías / Entregas / Mecanizados (Carga 74)</option>
-          <option value="vias_devolucion">Recepción / Devolución de Vía (Carga 74)</option>
-          <option value="accidente">Accidente de Persona (Carga 80)</option>
-          <option value="persona_vias">Persona en Zona de Vías (Carga 78)</option>
-          <option value="animales">Animales en Zona de Vías (Carga 78)</option>
-          <option value="custodia">Falta de Custodia Policial (Carga 78)</option>
-        </select>
-      </div>
-    </div>
-  </div>
+    <header>
+        <h1>Noviembre 2026</h1>
+        <span class="subtitle">Finanzas Personales</span>
+    </header>
 
-  <div class="card" id="moduloDinamico"></div>
+    <!-- Dashboard de Indicadores Principal -->
+    <div class="summary-dashboard">
+        <div class="metric-card full-width">
+            <span class="metric-label">Superávit Libre Estimado</span>
+            <span id="net-balance" class="metric-value balance">$0</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Ingresos Totales</span>
+            <span id="total-income" class="metric-value income">$0</span>
+        </div>
+        <div class="metric-card">
+            <span class="metric-label">Gastos Totales</span>
+            <span id="total-expenses" class="metric-value expense">$0</span>
+        </div>
+    </div>
 
-  <div class="card">
-    <div class="meta-panel">
-      <span>CÓDIGO DE CARGA: <span id="metaCarga" class="meta-tag">-</span></span>
-      <span>AVISOS INTERNOS: <span id="metaAvisos" class="meta-tag">-</span></span>
-    </div>
-    <div class="output-box" id="novedadTexto" style="margin-top: 10px;">SELECCIONE Y COMPLETE LOS CAMPOS...</div>
-    <div class="btn-group">
-      <button onclick="copiarNovedad()">Copiar Novedad Limpia</button>
-      <button class="btn-clear" onclick="limpiarTodo()">Limpiar</button>
-    </div>
-  </div>
+    <!-- SECCIÓN INGRESOS -->
+    <section class="glass-card">
+        <div class="section-header">
+            <span class="section-title">Ingresos</span>
+            <button class="add-btn" onclick="addRow('income-list')">+ Nuevo</button>
+        </div>
+        <div id="income-list" class="item-list">
+            <div class="item-row">
+                <input type="text" value="Sueldo Neto Base Promedio">
+                <input type="number" class="income-value" value="2771500" oninput="calculate()">
+                <button class="delete-btn" onclick="removeRow(this)">×</button>
+            </div>
+            <div class="item-row">
+                <input type="text" value="Recupero Préstamo U.F.">
+                <input type="number" class="income-value" value="232333.33" oninput="calculate()">
+                <button class="delete-btn" onclick="removeRow(this)">×</button>
+            </div>
+            <div class="item-row">
+                <input type="text" value="Feriado Trabajado">
+                <input type="number" class="income-value" value="108500" oninput="calculate()">
+                <button class="delete-btn" onclick="removeRow(this)">×</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN GASTOS -->
+    <section class="glass-card">
+        <div class="section-header">
+            <span class="section-title">Gastos y Servicios</span>
+            <button class="add-btn" onclick="addRow('expense-list')">+ Nuevo</button>
+        </div>
+        <div id="expense-list" class="item-list">
+            <div class="item-row"><input type="text" value="Crédito 1"><input type="number" class="expense-value" value="1050000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Crédito 2"><input type="number" class="expense-value" value="200000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Supermercado ($200k/sem)"><input type="number" class="expense-value" value="800000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Carnicería / Verdulería"><input type="number" class="expense-value" value="250000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Personal Internet + Flow"><input type="number" class="expense-value" value="216324" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Edesur (Luz)"><input type="number" class="expense-value" value="94570.28" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Metrogas (Gas)"><input type="number" class="expense-value" value="74139.23" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Personal Móvil"><input type="number" class="expense-value" value="36160" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Movistar Compra"><input type="number" class="expense-value" value="28573.40" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Movistar Móvil"><input type="number" class="expense-value" value="15002.23" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Transporte"><input type="number" class="expense-value" value="75000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Deportes"><input type="number" class="expense-value" value="38000" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Xbox"><input type="number" class="expense-value" value="24902.79" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="YouTube"><input type="number" class="expense-value" value="13515.28" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Spotify"><input type="number" class="expense-value" value="9984.22" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Crunchyroll"><input type="number" class="expense-value" value="9209.49" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Prime Video"><input type="number" class="expense-value" value="7863.79" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+            <div class="item-row"><input type="text" value="Meli+"><input type="number" class="expense-value" value="5490" oninput="calculate()"><button class="delete-btn" onclick="removeRow(this)">×</button></div>
+        </div>
+    </section>
 </div>
 
-<div id="toast" class="toast">Texto copiado al portapapeles</div>
-
 <script>
-function val(id) {
-  const el = document.getElementById(id);
-  return el ? el.value.trim().toUpperCase() : '';
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
-
-function wrapText69(texto) {
-  const lineas = texto.split('\n');
-  const salida = [];
-
-  for (const linea of lineas) {
-    if (linea.length <= 69) {
-      salida.push(linea);
-      continue;
+    function formatCurrency(val) {
+        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(val);
     }
-    const palabras = linea.split(' ');
-    let actual = '';
-    for (const p of palabras) {
-      if (!p) continue;
-      if (actual === '') {
-        actual = p;
-      } else if ((actual + ' ' + p).length <= 69) {
-        actual += ' ' + p;
-      } else {
-        salida.push(actual);
-        actual = p;
-      }
+
+    function calculate() {
+        let totalIncome = 0;
+        let totalExpense = 0;
+
+        document.querySelectorAll('.income-value').forEach(input => {
+            totalIncome += parseFloat(input.value) || 0;
+        });
+
+        document.querySelectorAll('.expense-value').forEach(input => {
+            totalExpense += parseFloat(input.value) || 0;
+        });
+
+        let balance = totalIncome - totalExpense;
+
+        document.getElementById('total-income').innerText = formatCurrency(totalIncome);
+        document.getElementById('total-expenses').innerText = formatCurrency(totalExpense);
+        
+        const balanceEl = document.getElementById('net-balance');
+        balanceEl.innerText = formatCurrency(balance);
     }
-    if (actual !== '') salida.push(actual);
-  }
-  return salida.join('\n');
-}
 
-function setSalida(texto, carga, avisos) {
-  document.getElementById('novedadTexto').innerText = wrapText69(texto);
-  document.getElementById('metaCarga').innerText = carga;
-  document.getElementById('metaAvisos').innerText = avisos;
-}
+    function addRow(containerId) {
+        const container = document.getElementById(containerId);
+        const isIncome = containerId === 'income-list';
+        const valueClass = isIncome ? 'income-value' : 'expense-value';
 
-function buildAviso(apellido, sector) {
-  return apellido ? `${apellido} ${sector}` : sector;
-}
-
-function formatearCA(arr) {
-  const filtrados = arr.filter(x => x && x.trim() !== '');
-  return filtrados.length > 0 ? `C/A: ${filtrados.join(', ')}.-` : '';
-}
-
-function renderModulo() {
-  const tipo = document.getElementById('tipoNovedad').value;
-  const mod = document.getElementById('moduloDinamico');
-  let html = '';
-
-  if (tipo === 'barrera') {
-    html = `
-      <h3>Falla / Rotura de Barrera en P. a N. (Carga 70)</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genBarrera()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genBarrera()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genBarrera()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genBarrera()"></div>
-        <div class="field"><label>Coches</label><input id="coches" placeholder="ej. 5 COCHES" oninput="genBarrera()"></div>
-        <div class="field"><label>Nombre P. a N.</label><input id="pan_nom" placeholder="ej. BOGADO" oninput="genBarrera()"></div>
-        <div class="field"><label>Kilometraje (Km)</label><input id="pan_km" placeholder="ej. 21/400" oninput="genBarrera()"></div>
-        <div class="field">
-          <label>Brazo Afectado</label>
-          <select id="brazo" onchange="genBarrera()">
-            <option value="BRAZO ASCENDENTE">BRAZO ASCENDENTE</option>
-            <option value="BRAZO DESCENDENTE">BRAZO DESCENDENTE</option>
-            <option value="AMBOS BRAZOS">AMBOS BRAZOS</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Estado</label>
-          <select id="estado" onchange="genBarrera()">
-            <option value="ROTO">ROTO / S</option>
-            <option value="BAJO">BAJO / S</option>
-            <option value="SEMILEVANTADO">SEMILEVANTADO / S</option>
-          </select>
-        </div>
-      </div>
-      <h3>Avisos Reglamentarios (Apellido)</h3>
-      <div class="grid">
-        <div class="field"><label>1. Circulación</label><input id="av_circ" oninput="genBarrera()"></div>
-        <div class="field"><label>2. Tracción</label><input id="av_trac" oninput="genBarrera()"></div>
-        <div class="field"><label>3. Estaciones</label><input id="av_est" oninput="genBarrera()"></div>
-        <div class="field"><label>4. Señalamiento</label><input id="av_sen" oninput="genBarrera()"></div>
-      </div>
-    `;
-  } else if (tipo === 'ats') {
-    html = `
-      <h3>Falla / Aplicación de A.T.S. (Carga 801)</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genATS()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genATS()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genATS()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" placeholder="ej. 7774" oninput="genATS()"></div>
-        <div class="field"><label>Coches</label><input id="coches" placeholder="ej. 5 COCHES" oninput="genATS()"></div>
-        <div class="field"><label>Estación / Lugar</label><input id="lugar" oninput="genATS()"></div>
-        <div class="field full-width">
-          <label>Motivo de Aplicación</label>
-          <input id="motivo_ats" placeholder="ej. DEJO EL CONTROLER EN PUNTO 1" oninput="genATS()">
-        </div>
-        <div class="field full-width">
-          <label>Resolución Operativa</label>
-          <select id="res_ats" onchange="toggleAtsInputs(); genATS();">
-            <option value="repone">REPONE DIRECTO (PUEDE REPONER Y REANUDA MARCHA)</option>
-            <option value="corta_repone">CORTA PRECINTO, REPONE Y REANUDA MARCHA</option>
-            <option value="corta_no_repone">CORTA PRECINTO Y NO REPONE (ESPERA AUXILIO M/R)</option>
-          </select>
-        </div>
-        <div class="field hidden" id="f_precinto">
-          <label>N° de Precinto Cortado</label>
-          <input id="precinto" placeholder="ej. 2527009" oninput="genATS()">
-        </div>
-      </div>
-      <h3>Avisos</h3>
-      <div class="grid">
-        <div class="field"><label>Apellido Mat. Rodante</label><input id="ap_mr" oninput="genATS()"></div>
-        <div class="field"><label>Apellido Video MKS</label><input id="ap_video" oninput="genATS()"></div>
-        <div class="field"><label>Apellido Sup. Por Informes</label><input id="ap_sup" oninput="genATS()"></div>
-      </div>
-    `;
-  } else if (tipo === 'circuito_senal') {
-    html = `
-      <h3>Falla de Señal / Circuito Ocupado (Carga 72)</h3>
-      <div class="grid">
-        <div class="field full-width">
-          <label>Origen del Aviso</label>
-          <select id="origen" onchange="toggleCircuito(); genCircuito();">
-            <option value="sup">SUPERVISOR DE ESTACIÓN (CIRCUITO OCUPADO)</option>
-            <option value="cond">CONDUCTOR (SEÑAL ANÓMALA)</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid" id="bloque_sup" style="margin-top:10px;">
-        <div class="field"><label>Supervisor (Apellido)</label><input id="sup_ap" oninput="genCircuito()"></div>
-        <div class="field"><label>Estación</label><input id="estacion" oninput="genCircuito()"></div>
-        <div class="field"><label>Sector / Vía Afectada</label><input id="sector" oninput="genCircuito()"></div>
-        <div class="field"><label>Señal Afectada 1</label><input id="s1" oninput="genCircuito()"></div>
-        <div class="field"><label>Señal Afectada 2</label><input id="s2" oninput="genCircuito()"></div>
-        <div class="field">
-          <label>Afectación de Barreras</label>
-          <select id="afecta_barreras" onchange="toggleBarrerasCirc(); genCircuito();">
-            <option value="no">SIN AFECTACIÓN DE BARRERAS</option>
-            <option value="si">AFECTA BARRERAS</option>
-          </select>
-        </div>
-        <div class="field hidden" id="f_pan_nom"><label>P. a N. Nombre</label><input id="pan_nom_c" oninput="genCircuito()"></div>
-        <div class="field hidden" id="f_pan_km"><label>Km P. a N.</label><input id="pan_km_c" oninput="genCircuito()"></div>
-        <div class="field hidden" id="f_pan_est">
-          <label>Comportamiento Barreras</label>
-          <select id="pan_estado_c" onchange="genCircuito()">
-            <option value="PERMANECEN BAJAS">PERMANECEN BAJAS</option>
-            <option value="BAJAN A DESTIEMPO">BAJAN A DESTIEMPO</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid hidden" id="bloque_cond" style="margin-top:10px;">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Tren</label><input id="tren_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Coches</label><input id="coches_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Lugar / Estación</label><input id="lugar_c" oninput="genCircuito()"></div>
-        <div class="field"><label>Señal (Identificación)</label><input id="senal_id" oninput="genCircuito()"></div>
-        <div class="field">
-          <label>Estado Señal</label>
-          <select id="estado_senal" onchange="genCircuito()">
-            <option value="A PELIGRO">A PELIGRO</option>
-            <option value="APAGADA">APAGADA</option>
-            <option value="INTERMITENTE">INTERMITENTE</option>
-          </select>
-        </div>
-      </div>
-      <h3 style="margin-top:12px;">Avisos</h3>
-      <div class="grid">
-        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genCircuito()"></div>
-        <div class="field" id="f_av_resg"><label>Apellido Resguardo (si afecta P. a N.)</label><input id="ap_resg" oninput="genCircuito()"></div>
-      </div>
-    `;
-  } else if (tipo === 'cambio_fc') {
-    html = `
-      <h3>Cambio Fuera de Correspondencia (Carga 73)</h3>
-      <div class="grid">
-        <div class="field"><label>Supervisor (Apellido)</label><input id="sup_ap" oninput="genCambioFC()"></div>
-        <div class="field"><label>Estación</label><input id="estacion" oninput="genCambioFC()"></div>
-        <div class="field"><label>Identificación de Cambio</label><input id="cambio_id" placeholder="ej. CAMBIO 4" oninput="genCambioFC()"></div>
-        <div class="field">
-          <label>Posición</label>
-          <select id="posicion" onchange="genCambioFC()">
-            <option value="NORMAL">NORMAL</option>
-            <option value="INVERTIDA">INVERTIDA</option>
-            <option value="AMBAS POSICIONES">AMBAS POSICIONES</option>
-          </select>
-        </div>
-        <div class="field"><label>Apellido Señalamiento</label><input id="ap_sen" oninput="genCambioFC()"></div>
-      </div>
-    `;
-  } else if (tipo === 'vias_entrega') {
-    html = `
-      <h3>Vías / Entregas / Mecanizados (Carga 74)</h3>
-      <div class="grid">
-        <div class="field"><label>Inspector de Vía (Apellido)</label><input id="insp_ap" oninput="genViasEntrega()"></div>
-        <div class="field">
-          <label>Vía Entregada</label>
-          <select id="via" onchange="genViasEntrega()">
-            <option value="VÍA ASCENDENTE">VÍA ASCENDENTE</option>
-            <option value="VÍA DESCENDENTE">VÍA DESCENDENTE</option>
-            <option value="AMBAS VÍAS">AMBAS VÍAS</option>
-          </select>
-        </div>
-        <div class="field"><label>Estación Origen</label><input id="est_a" oninput="genViasEntrega()"></div>
-        <div class="field"><label>Estación Destino</label><input id="est_b" oninput="genViasEntrega()"></div>
-        <div class="field"><label>Consigna de Trabajo N°</label><input id="consigna" oninput="genViasEntrega()"></div>
-        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genViasEntrega()"></div>
-        <div class="field"><label>Apellido Infraestructura</label><input id="ap_infra" oninput="genViasEntrega()"></div>
-      </div>
-    `;
-  } else if (tipo === 'vias_devolucion') {
-    html = `
-      <h3>Recepción / Devolución de Vía (Carga 74)</h3>
-      <div class="grid">
-        <div class="field"><label>Inspector que Devuelve</label><input id="insp_dev" oninput="genViasDevolucion()"></div>
-        <div class="field"><label>Inspector que Recibe</label><input id="insp_rec" oninput="genViasDevolucion()"></div>
-        <div class="field">
-          <label>Vía</label>
-          <select id="via" onchange="genViasDevolucion()">
-            <option value="VÍA ASCENDENTE">VÍA ASCENDENTE</option>
-            <option value="VÍA DESCENDENTE">VÍA DESCENDENTE</option>
-            <option value="AMBAS VÍAS">AMBAS VÍAS</option>
-          </select>
-        </div>
-        <div class="field"><label>Estación Origen</label><input id="est_a" oninput="genViasDevolucion()"></div>
-        <div class="field"><label>Estación Destino</label><input id="est_b" oninput="genViasDevolucion()"></div>
-        <div class="field">
-          <label>Condición</label>
-          <select id="condicion" onchange="toggleDevolucion(); genViasDevolucion();">
-            <option value="normal">CIRCULACIÓN NORMAL</option>
-            <option value="precaucion">CON PRECAUCIÓN</option>
-          </select>
-        </div>
-        <div class="field hidden" id="f_vel"><label>Velocidad (Km/h)</label><input id="vel" oninput="genViasDevolucion()"></div>
-        <div class="field hidden" id="f_motivo"><label>Motivo de Precaución</label><input id="motivo" oninput="genViasDevolucion()"></div>
-        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genViasDevolucion()"></div>
-        <div class="field"><label>Apellido Infraestructura</label><input id="ap_infra" oninput="genViasDevolucion()"></div>
-      </div>
-    `;
-  } else if (tipo === 'accidente') {
-    html = `
-      <h3>Accidente de Persona (Carga 80)</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genAccidente()"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genAccidente()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genAccidente()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genAccidente()"></div>
-        <div class="field"><label>Coches</label><input id="coches" oninput="genAccidente()"></div>
-        <div class="field"><label>Lugar / Entre Estaciones</label><input id="lugar" oninput="genAccidente()"></div>
-        <div class="field">
-          <label>Tipo de Evento</label>
-          <select id="tipo_acc" onchange="genAccidente()">
-            <option value="ARROLLAMIENTO">ARROLLAMIENTO</option>
-            <option value="EMBESTIMIENTO">EMBESTIMIENTO</option>
-          </select>
-        </div>
-        <div class="field"><label>Obstrucción de Vía</label><input id="obstruccion" placeholder="ej. OBSTRUYE VÍA DESCENDENTE" oninput="genAccidente()"></div>
-      </div>
-      <h3>Recepción de Avisos (Apellido opcional)</h3>
-      <div class="grid">
-        <div class="field"><label>1. Guardia Transporte</label><input id="av_guardia" oninput="genAccidente()"></div>
-        <div class="field"><label>2. Dr. Benaglia</label><input id="av_benaglia" oninput="genAccidente()"></div>
-        <div class="field"><label>6. Seguridad</label><input id="av_seguridad" oninput="genAccidente()"></div>
-        <div class="field"><label>7. Coord. Estación</label><input id="av_coord" oninput="genAccidente()"></div>
-        <div class="field"><label>8. Jefe Transporte</label><input id="av_jefetrans" oninput="genAccidente()"></div>
-        <div class="field"><label>9. Jefe Circulación</label><input id="av_jefecirc" oninput="genAccidente()"></div>
-        <div class="field"><label>10. Depto. Legales</label><input id="av_legales" oninput="genAccidente()"></div>
-        <div class="field"><label>11. Jefe Tracción</label><input id="av_traccion" oninput="genAccidente()"></div>
-        <div class="field"><label>12. Jefe Resguardo</label><input id="av_resguardo" oninput="genAccidente()"></div>
-        <div class="field"><label>13. Atención Pasajero</label><input id="av_pasajero" oninput="genAccidente()"></div>
-        <div class="field"><label>14. Psicóloga</label><input id="av_psicologa" oninput="genAccidente()"></div>
-        <div class="field"><label>15. Video</label><input id="av_video" oninput="genAccidente()"></div>
-        <div class="field"><label>16. Depósito</label><input id="av_deposito" oninput="genAccidente()"></div>
-        <div class="field"><label>17. Señalamiento</label><input id="av_senalamiento" oninput="genAccidente()"></div>
-        <div class="field"><label>Sup. Boulogne</label><input id="av_boulogne" placeholder="Apellido" oninput="genAccidente()"></div>
-      </div>
-    `;
-  } else if (tipo === 'persona_vias' || tipo === 'animales') {
-    const esAnimal = tipo === 'animales';
-    html = `
-      <h3>${esAnimal ? 'Animales en Zona de Vías' : 'Persona en Zona de Vías'} (Carga 78)</h3>
-      <div class="grid">
-        <div class="field"><label>Conductor (Apellido)</label><input id="cond_ap" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Legajo</label><input id="cond_leg" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Coches</label><input id="coches" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Lugar / Tramo</label><input id="lugar" oninput="genVias('${tipo}')"></div>
-        <div class="field full-width">
-          <label>Acción / Dinámica</label>
-          <select id="dinamica" onchange="toggleFrenoVias(); genVias('${tipo}');">
-            <option value="freno">APLICÓ FRENO DE EMERGENCIA (SIN CONSECUENCIAS)</option>
-            <option value="aviso">SOLO OBSERVA (SIN APLICACIÓN DE FRENO)</option>
-          </select>
-        </div>
-        <div class="field" id="f_atraso"><label>Minutos Atraso</label><input id="atraso" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genVias('${tipo}')"></div>
-        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genVias('${tipo}')"></div>
-      </div>
-    `;
-  } else if (tipo === 'custodia') {
-    html = `
-      <h3>Falta de Custodia Policial (Carga 78)</h3>
-      <div class="grid">
-        <div class="field"><label>Guardatrén (Apellido)</label><input id="guarda_ap" oninput="genCustodia()"></div>
-        <div class="field"><label>Legajo</label><input id="guarda_leg" oninput="genCustodia()"></div>
-        <div class="field"><label>Tren</label><input id="tren" oninput="genCustodia()"></div>
-        <div class="field"><label>Locomotora</label><input id="loc" oninput="genCustodia()"></div>
-        <div class="field"><label>Coches</label><input id="coches" oninput="genCustodia()"></div>
-        <div class="field"><label>Estación Demora</label><input id="lugar" oninput="genCustodia()"></div>
-        <div class="field"><label>Minutos Detenida</label><input id="minutos" oninput="genCustodia()"></div>
-        <div class="field full-width">
-          <label>Resolución</label>
-          <select id="resolucion" onchange="genCustodia()">
-            <option value="sin_custodia">CIRCULA SIN CUSTODIA</option>
-            <option value="con_policia">HACE PRESENTE PERSONAL POLICIAL</option>
-          </select>
-        </div>
-        <div class="field"><label>Apellido Resguardo</label><input id="ap_resg" oninput="genCustodia()"></div>
-        <div class="field"><label>Apellido Sup. Boulogne</label><input id="ap_boulogne" oninput="genCustodia()"></div>
-      </div>
-    `;
-  }
-
-  mod.innerHTML = html;
-  document.getElementById('novedadTexto').innerText = 'COMPLETE LOS CAMPOS PARA GENERAR LA NOVEDAD...';
-  document.getElementById('metaCarga').innerText = '-';
-  document.getElementById('metaAvisos').innerText = '-';
-  if (tipo === 'barrera') genBarrera();
-}
-
-// 1. BARRERA (1 Circulación, 2 Tracción, 3 Estaciones, 4 Señalamiento)
-function genBarrera() {
-  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const plural = val('brazo').includes('AMBOS');
-  let est = val('estado');
-  if (plural && !est.endsWith('S')) est += 'S';
-
-  const cuerpo = `INF. QUE AL PASO POR P. a N. ${val('pan_nom')} Km ${val('pan_km')} ${val('brazo')} SE ENCUENTRA${plural ? 'N' : ''} ${est}.-`;
-  
-  function itemAv(valItem, cargo, num) {
-    return valItem ? `${num} ${cargo} ${valItem}` : `${num} ${cargo}`;
-  }
-
-  const avisos = [
-    itemAv(val('av_circ'), 'CIRCULACIÓN', '1'),
-    itemAv(val('av_trac'), 'TRACCIÓN', '2'),
-    itemAv(val('av_est'), 'ESTACIONES', '3'),
-    itemAv(val('av_sen'), 'SEÑALAMIENTO', '4')
-  ].join('\n');
-
-  setSalida(`${cond}\n${cuerpo}\nCON AVISOS A:\n${avisos}.-`, '70', '1-2-3-4');
-}
-
-// 2. ATS (Flujo de reposición y corte)
-function toggleAtsInputs() {
-  const modo = document.getElementById('res_ats').value;
-  const fPrec = document.getElementById('f_precinto');
-  fPrec.classList.toggle('hidden', modo === 'repone');
-}
-
-function genATS() {
-  const cochesTxt = val('coches') ? ` (${val('coches')})` : '';
-  const cond = `CONDUCTOR ${val('cond_ap')} (${val('cond_leg')}) T/${val('tren')} LOC.${val('loc')}${cochesTxt}`;
-  
-  const modo = document.getElementById('res_ats').value;
-  let accion = '';
-  if (modo === 'repone') {
-    accion = 'PUEDE REPONER Y REANUDA MARCHA.-';
-  } else if (modo === 'corta_repone') {
-    accion = `NO PUEDE REPONER, CORTA PRECINTO ${val('precinto')}. REPONE Y REANUDA MARCHA.-`;
-  } else {
-    accion = `NO PUEDE REPONER, CORTA PRECINTO ${val('precinto')}. NO REPONE, FORMACIÓN A LA ESPERA DE AUXILIO DE MATERIAL RODANTE.-`;
-  }
-
-  const cuerpo = `INFORMA EN ESTACIÓN ${val('lugar')} SE APLICA DISPOSITIVO ATS, ${val('motivo_ats')}. ${accion}`;
-
-  const avisos = [];
-  if (val('ap_mr')) avisos.push(`C/A ${val('ap_mr')} MAT. RODANTE.-`);
-  if (val('ap_video')) avisos.push(`C/A ${val('ap_video')} VIDEO MKS.-`);
-  if (val('ap_sup')) avisos.push(`SUP. ${val('ap_sup')} POR INFORMES.-`);
-
-  setSalida(`${cond}\n${cuerpo}\n${avisos.join('\n')}`, '801', '2-15-19');
-}
-
-// 3. CIRCUITO / SEÑAL
-function toggleCircuito() {
-  const orig = document.getElementById('origen').value;
-  document.getElementById('bloque_sup').classList.toggle('hidden', orig !== 'sup');
-  document.getElementById('bloque_cond').classList.toggle('hidden', orig !== 'cond');
-  document.getElementById('f_av_resg').classList.toggle('hidden', orig !== 'sup');
-}
-
-function toggleBarrerasCirc() {
-  const afecta = document.getElementById('afecta_barreras').value === 'si';
-  document.getElementById('f_pan_nom').classList.toggle('hidden', !afecta);
-  document.getElementById('f_pan_km').classList.toggle('hidden', !afecta);
-  document.getElementById('f_pan_est').classList.toggle('hidden', !afecta);
-}
-
-function genCircuito() {
-  const orig = document.getElementById('origen').value;
-  let cabecera = '';
-  let cuerpo = '';
-  let caArr = [];
-  let avisosCod = '17';
-
-  if (orig === 'sup') {
-    cabecera = `SUP. ${val('sup_ap')} EST. ${val('estacion')}`;
-    const afecta = document.getElementById('afecta_barreras').value === 'si';
-    if (!afecta) {
-      cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. SIN AFECTACIÓN DE BARRERAS.-`;
-    } else {
-      cuerpo = `INF. CIRCUITO OCUPADO EN SECTOR ${val('sector')}, AFECTANDO SEÑALES ${val('s1')} Y ${val('s2')}. EN P. a N. ${val('pan_nom_c')} Km ${val('pan_km_c')} BARRERAS ${val('pan_estado_c')}.-`;
-      caArr.push(buildAviso(val('ap_resg'), 'RESGUARDO'));
-      avisosCod = '12-17';
+        const row = document.createElement('div');
+        row.className = 'item-row';
+        row.innerHTML = `
+            <input type="text" placeholder="Nuevo concepto">
+            <input type="number" class="${valueClass}" value="0" oninput="calculate()">
+            <button class="delete-btn" onclick="removeRow(this)">×</button>
+        `;
+        container.appendChild(row);
     }
-    caArr.unshift(buildAviso(val('ap_sen'), 'SEÑALAMIENTO'));
-  } else {
-    cabecera = `COND. ${val('cond_ap_c')} (${val('cond_leg_c')}) - T/${val('tren_c')} LOC.${val('loc_c')} (${val('coches_c')})`;
-    cuerpo = `INF. QUE AL PASO POR ${val('lugar_c')} SEÑAL ${val('senal_id')} SE ENCUENTRA ${val('estado_senal')}.-`;
-    caArr.push(buildAviso(val('ap_sen'), 'SEÑALAMIENTO'));
-  }
 
-  setSalida(`${cabecera}\n${cuerpo}\n${formatearCA(caArr)}`, '72', avisosCod);
-}
+    function removeRow(btn) {
+        btn.parentElement.remove();
+        calculate();
+    }
 
-// 4. CAMBIO FUERA DE CORRESPONDENCIA
-function genCambioFC() {
-  const cab = `SUP. ${val('sup_ap')} EST. ${val('estacion')}`;
-  const cuerpo = `INF. CAMBIO ${val('cambio_id')} FUERA DE CORRESPONDENCIA EN POSICIÓN ${val('posicion')}.-`;
-  const ca = formatearCA([buildAviso(val('ap_sen'), 'SEÑALAMIENTO')]);
-  setSalida(`${cab}\n${cuerpo}\n${ca}`, '73', '17');
-}
-
-// 5. VIAS ENTREGA
-function genViasEntrega() {
-  const cab = `INSP. DE VÍA ${val('insp_ap')}`;
-  const cuerpo = `ENTREGA ${val('via')} ENTRE ESTACIONES ${val('est_a')} Y ${val('est_b')} PARA TRABAJOS DE MECANIZADO, SEGÚN CONSIGNA DE TRABAJO ${val('consigna')}.-`;
-  const ca = formatearCA([
-    buildAviso(val('ap_resg'), 'RESGUARDO'),
-    buildAviso(val('ap_infra'), 'INFRAESTRUCTURA')
-  ]);
-  setSalida(`${cab}\n${cuerpo}\n${ca}`, '74', '12-18');
-}
-
-// 6. VIAS DEVOLUCION
-function toggleDevolucion() {
-  const esPrec = document.getElementById('condicion').value === 'precaucion';
-  document.getElementById('f_vel').classList.toggle('hidden', !esPrec);
-  document.getElementById('f_motivo').classList.toggle('hidden', !esPrec);
-}
-
-function genViasDevolucion() {
-  const cab = `INSP. ${val('insp_dev')} DEVUELVE LA CIRCULACIÓN DE ${val('via')} ENTRE ESTACIONES ${val('est_a')} Y ${val('est_b')} AL INSP. ${val('insp_rec')}.`;
-  const esPrec = document.getElementById('condicion').value === 'precaucion';
-  const condTxt = esPrec
-    ? `CIRCULACIÓN CON PRECAUCIÓN A ${val('vel')} KM/H POR ${val('via')} DEBIDO A ${val('motivo')}.-`
-    : 'CIRCULACIÓN NORMAL POR EL SECTOR.-';
-  
-  const ca = formatearCA([
-    buildAviso(val('ap_resg'), 'RESGUARDO'),
-    buildAviso(val('ap_infra'), 'INFRAESTRUCTURA')
-  ]);
-  setSalida(`${cab} ${condTxt}\n${ca}`, '74', '12-18');
-}
-
-// 7. ACCIDENTE
-function genAccidente() {
-  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const desc = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${val('tipo_acc')} DE PERSONA EN ZONA DE VÍAS. ${val('obstruccion')}. FORMACIÓN DETENIDA A LA ESPERA DE SERVICIOS DE EMERGENCIA Y POLICÍA.-`;
-  
-  function itemAv(valItem, cargo) { return valItem ? `- ${cargo} ${valItem}` : `- ${cargo}`; }
-
-  const avisos = [
-    itemAv(val('av_guardia'), 'GUARDIA TRANSPORTE'),
-    itemAv(val('av_benaglia'), 'DR. BENAGLIA'),
-    itemAv(val('av_seguridad'), 'SEGURIDAD'),
-    itemAv(val('av_coord'), 'COORD. ESTACIÓN'),
-    itemAv(val('av_jefetrans'), 'JEFE TRANSPORTE'),
-    itemAv(val('av_jefecirc'), 'JEFE CIRCULACIÓN'),
-    itemAv(val('av_legales'), 'DEPTO. LEGALES'),
-    itemAv(val('av_traccion'), 'JEFE TRACCIÓN'),
-    itemAv(val('av_resguardo'), 'JEFE RESGUARDO'),
-    itemAv(val('av_pasajero'), 'ATENCIÓN AL PASAJERO'),
-    itemAv(val('av_psicologa'), 'PSICÓLOGA'),
-    itemAv(val('av_video'), 'VIDEO'),
-    itemAv(val('av_deposito'), 'DEPÓSITO'),
-    itemAv(val('av_senalamiento'), 'SEÑALAMIENTO'),
-    `- SUP. ${val('av_boulogne')} EST. BOULOGNE (POR INFORME).-`
-  ].join('\n');
-
-  setSalida(`${cond}\n${desc}\nCON AVISOS A:\n${avisos}`, '80', '1-2-6-7-8-9-10-11-12-13-14-15-16-17 + SUP');
-}
-
-// 8. VIAS PERSONA / ANIMAL
-function toggleFrenoVias() {
-  const din = document.getElementById('dinamica').value;
-  document.getElementById('f_atraso').classList.toggle('hidden', din !== 'freno');
-}
-
-function genVias(tipo) {
-  const esAnimal = tipo === 'animales';
-  const sujeto = esAnimal ? 'ANIMALES EN ZONA DE VÍAS' : 'PERSONA EN ZONA DE VÍAS';
-  const din = document.getElementById('dinamica').value;
-  
-  let cuerpo = '';
-  if (din === 'freno') {
-    cuerpo = `INF. EN ${val('lugar')} APLICÓ FRENO DE EMERGENCIA POR ${sujeto}. SIN CONSECUENCIAS. REANUDA MARCHA CON ${val('atraso')} MIN. ATRASO.-`;
-  } else {
-    cuerpo = `INF. QUE AL PASO POR ${val('lugar')} OBSERVA ${sujeto}.-`;
-  }
-
-  const cond = `COND. ${val('cond_ap')} (${val('cond_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const ca = formatearCA([
-    buildAviso(val('ap_resg'), 'RESGUARDO'),
-    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
-  ]);
-  setSalida(`${cond}\n${cuerpo}\n${ca}`, '78', '12-19');
-}
-
-// 9. CUSTODIA
-function genCustodia() {
-  const cab = `GUARDATRÉN ${val('guarda_ap')} (${val('guarda_leg')}) - T/${val('tren')} LOC.${val('loc')} (${val('coches')})`;
-  const res = document.getElementById('resolucion').value;
-  let fin = res === 'sin_custodia' ? 'CIRCULA SIN CUSTODIA.-' : 'TRAS HACERSE PRESENTE PERSONAL POLICIAL, FORMACIÓN ESTUVO DETENIDA DICHO TIEMPO.-';
-  
-  const cuerpo = `INF. EN EST. ${val('lugar')} DEMORA POR FALTA DE CUSTODIA POLICIAL A BORDO. FORMACIÓN ESTUVO DETENIDA ${val('minutos')} MIN. EN DICHA ESTACIÓN. ${fin}`;
-  const ca = formatearCA([
-    buildAviso(val('ap_resg'), 'RESGUARDO'),
-    val('ap_boulogne') ? `SUP. ${val('ap_boulogne')} EST. BOULOGNE (POR INFORME)` : 'SUP. EST. BOULOGNE (POR INFORME)'
-  ]);
-  setSalida(`${cab}\n${cuerpo}\n${ca}`, '78', '12-19');
-}
-
-function copiarNovedad() {
-  const txt = document.getElementById('novedadTexto').innerText;
-  if (!txt || txt.startsWith('SELECCIONE') || txt.startsWith('COMPLETE')) return;
-  navigator.clipboard.writeText(txt).then(() => {
-    showToast('¡Texto copiado al portapapeles!');
-  });
-}
-
-function limpiarTodo() {
-  renderModulo();
-}
-
-window.onload = renderModulo;
+    calculate();
 </script>
+
 </body>
 </html>
+</file_content>
+</a_file_is_created>
