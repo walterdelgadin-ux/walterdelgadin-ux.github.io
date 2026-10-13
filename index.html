@@ -1,5 +1,5 @@
 <a_file_is_created>
-  
+  <file_name>presupuesto_categorias_colores.html</file_name>
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -67,7 +67,6 @@
             letter-spacing: 0.1em;
         }
 
-        /* Barra de Herramientas */
         .toolbar {
             display: flex;
             gap: 10px;
@@ -120,13 +119,6 @@
             padding: 12px 14px;
         }
 
-        .tool-btn.super-btn:active {
-            transform: scale(0.96);
-            background: rgba(168, 85, 247, 0.4);
-            color: #fff;
-        }
-
-        /* Dashboard Indicadores */
         .summary-dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -174,7 +166,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Categorías y Glass Cards */
         .category-card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -262,7 +253,6 @@
             color: var(--danger-color);
         }
 
-        /* Filas de ítems */
         .item-list {
             display: flex;
             flex-direction: column;
@@ -322,7 +312,6 @@
             color: var(--danger-color);
         }
 
-        /* Botón de Nueva Categoría */
         .add-category-bar {
             margin-top: 10px;
             margin-bottom: 25px;
@@ -349,7 +338,6 @@
             transform: scale(0.98);
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -377,31 +365,28 @@
 
 <div class="container">
     <header>
-        <h1>PRESUPUESTO 💵</h1>
+        <h1>Noviembre 2026</h1>
         <span class="subtitle">Finanzas Personales Categorizadas</span>
     </header>
 
-    <!-- Toolbar de Acción -->
     <div class="toolbar">
         <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
-            ↩ Atrás
+            ↩ Volver atrás
         </button>
         <button class="tool-btn save-btn" onclick="saveData()">
-            💾 Guardar
+            💾 Guardar cambios
         </button>
     </div>
 
-    <!-- Planificador de Superávit -->
     <div class="nav-bar">
         <a href="super.html" class="tool-btn super-btn">
             ⚡ Planificar Superávit ➜
         </a>
     </div>
 
-    <!-- Indicadores -->
     <div class="summary-dashboard">
         <div class="metric-card full-width">
-            <span class="metric-label">Libre</span>
+            <span class="metric-label">Superávit Libre Estimado</span>
             <span id="net-balance" class="metric-value balance">$0</span>
         </div>
         <div class="metric-card">
@@ -414,13 +399,9 @@
         </div>
     </div>
 
-    <!-- SECCIÓN INGRESOS -->
     <div id="income-section"></div>
-
-    <!-- SECCIÓN GASTOS (CATEGORÍAS DINÁMICAS) -->
     <div id="categories-container"></div>
 
-    <!-- BOTÓN AGREGAR CATEGORÍA -->
     <div class="add-category-bar">
         <button class="add-cat-btn" onclick="addNewCategory()">
             + Agregar Nueva Categoría de Gasto
@@ -431,7 +412,6 @@
 <div id="toast" class="toast">✓ Cambios guardados correctamente</div>
 
 <script>
-    // Configuración inicial por defecto con Categorías y Colores
     const defaultData = {
         incomeCategory: {
             title: "Ingresos",
@@ -516,7 +496,6 @@
     }
 
     function getCurrentData() {
-        // Obtener Ingresos
         const incomeInc = {
             title: "Ingresos",
             color: document.getElementById('income-color-picker')?.value || "#10b981",
@@ -529,7 +508,6 @@
             });
         });
 
-        // Obtener Categorías de Gastos
         const expenseCategories = [];
         document.querySelectorAll('.expense-category-card').forEach(card => {
             const catId = card.id;
@@ -549,7 +527,6 @@
     }
 
     function renderData(data) {
-        // Render Ingresos
         const incomeSec = document.getElementById('income-section');
         incomeSec.innerHTML = `
             <div class="category-card" style="--category-color: ${data.incomeCategory.color};">
@@ -569,7 +546,6 @@
             incomeItemsCont.appendChild(createRow(item.text, item.val, 'income-val'));
         });
 
-        // Render Gastos
         const catContainer = document.getElementById('categories-container');
         catContainer.innerHTML = '';
         data.expenseCategories.forEach(cat => {
@@ -617,4 +593,93 @@
         const row = document.createElement('div');
         row.className = 'item-row';
         row.innerHTML = `
-            <input type="
+            <input type="text" value="${text}" onfocus="pushState()" onchange="calculate()">
+            <input type="number" class="${valueClass}" value="${val}" onfocus="pushState()" oninput="calculate()">
+            <button class="delete-btn" onclick="removeRow(this)">×</button>
+        `;
+        return row;
+    }
+
+    function addItemToCategory(containerId, type) {
+        pushState();
+        const container = document.getElementById(containerId);
+        const valueClass = type === 'income' ? 'income-val' : 'expense-val';
+        container.appendChild(createRow('', 0, valueClass));
+        calculate();
+    }
+
+    function addNewCategory() {
+        pushState();
+        const colors = ['#ec4899', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#64748b'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const newCat = {
+            id: 'cat_' + Date.now(),
+            title: 'Nueva Categoría',
+            color: randomColor,
+            items: [{ text: '', val: 0 }]
+        };
+        document.getElementById('categories-container').appendChild(createCategoryCard(newCat));
+        calculate();
+    }
+
+    function deleteCategory(catId) {
+        pushState();
+        document.getElementById(catId).remove();
+        calculate();
+    }
+
+    function removeRow(btn) {
+        pushState();
+        btn.parentElement.remove();
+        calculate();
+    }
+
+    function calculate() {
+        let totalIncome = 0;
+        let totalExpense = 0;
+
+        document.querySelectorAll('.income-val').forEach(input => {
+            totalIncome += parseFloat(input.value) || 0;
+        });
+
+        document.querySelectorAll('.expense-val').forEach(input => {
+            totalExpense += parseFloat(input.value) || 0;
+        });
+
+        let balance = totalIncome - totalExpense;
+
+        document.getElementById('total-income').innerText = formatCurrency(totalIncome);
+        document.getElementById('total-expenses').innerText = formatCurrency(totalExpense);
+        document.getElementById('net-balance').innerText = formatCurrency(balance);
+    }
+
+    function saveData() {
+        const data = getCurrentData();
+        localStorage.setItem('presupuesto_categorias_data', JSON.stringify(data));
+        
+        const toast = document.getElementById('toast');
+        toast.className = 'toast show';
+        setTimeout(() => toast.className = 'toast', 2000);
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('presupuesto_categorias_data');
+        if (saved) {
+            try {
+                renderData(JSON.parse(saved));
+            } catch(e) {
+                renderData(defaultData);
+            }
+        } else {
+            renderData(defaultData);
+        }
+        calculate();
+    }
+
+    loadData();
+</script>
+
+</body>
+</html>
+</file_content>
+</a_file_is_created>
