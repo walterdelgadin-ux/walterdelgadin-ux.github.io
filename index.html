@@ -5,11 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presupuesto Noviembre 2026 - Ultra Modern Pro</title>
+    <title>Presupuesto - Categorías & Colores</title>
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(22, 28, 45, 0.7);
+            --card-bg: rgba(22, 28, 45, 0.75);
             --card-border: rgba(255, 255, 255, 0.08);
             --primary-accent: #6366f1;
             --primary-glow: rgba(99, 102, 241, 0.35);
@@ -22,7 +22,7 @@
 
         * {
             box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -39,9 +39,9 @@
         }
 
         .container {
-            max-width: 480px;
+            max-width: 500px;
             margin: 0 auto;
-            padding-bottom: 30px;
+            padding-bottom: 40px;
         }
 
         header {
@@ -67,7 +67,7 @@
             letter-spacing: 0.1em;
         }
 
-        /* Barra de Herramientas (Guardar y Deshacer) */
+        /* Barra de Herramientas */
         .toolbar {
             display: flex;
             gap: 10px;
@@ -107,28 +107,12 @@
             color: var(--success-color);
         }
 
-        .tool-btn.save-btn:active {
-            background: var(--success-color);
-            color: #000;
-        }
-
-        /* Dashboards Cards Neo-Glass */
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-
+        /* Dashboard Indicadores */
         .summary-dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .metric-card {
@@ -159,7 +143,6 @@
         .metric-value {
             font-size: 1.3em;
             font-weight: 700;
-            letter-spacing: -0.01em;
         }
 
         .metric-value.income { color: var(--success-color); }
@@ -172,72 +155,120 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            padding: 0 4px;
+        /* Categorías y Glass Cards */
+        .category-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-left: 5px solid var(--category-color, var(--primary-accent));
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.4);
         }
 
-        .section-title {
-            font-size: 0.95em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .category-title-wrap {
             display: flex;
             align-items: center;
             gap: 8px;
+            flex: 1;
         }
 
-        .section-title::before {
-            content: '';
-            width: 6px;
-            height: 6px;
+        .color-picker-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
             border-radius: 50%;
-            background: var(--primary-accent);
-            box-shadow: 0 0 8px var(--primary-accent);
         }
 
-        .add-btn {
-            background: rgba(99, 102, 241, 0.15);
-            color: var(--primary-accent);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 10px;
-            padding: 6px 12px;
-            font-size: 0.78em;
+        .color-picker-input::-webkit-color-swatch {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        .category-title {
+            font-size: 1em;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+            width: 100%;
+        }
+
+        .category-title:focus {
+            border-bottom: 1px solid var(--primary-accent);
+        }
+
+        .category-total {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .add-item-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.75em;
             font-weight: 600;
             cursor: pointer;
         }
 
-        .add-btn:active {
-            transform: scale(0.95);
-            background: var(--primary-accent);
-            color: #fff;
+        .add-item-btn:active {
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Modern List Inputs */
+        .delete-category-btn {
+            background: transparent;
+            border: none;
+            color: rgba(244, 63, 94, 0.5);
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
+        .delete-category-btn:active {
+            color: var(--danger-color);
+        }
+
+        /* Filas de ítems */
         .item-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .item-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: var(--input-bg);
             border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 4px 6px 4px 12px;
+            border-radius: 12px;
+            padding: 2px 4px 2px 10px;
         }
 
         .item-row:focus-within {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 12px var(--primary-glow);
+            border-color: rgba(255, 255, 255, 0.2);
             background: rgba(30, 41, 59, 0.8);
         }
 
@@ -246,17 +277,16 @@
             background: transparent;
             border: none;
             color: var(--text-main);
-            font-size: 0.88em;
-            font-weight: 500;
+            font-size: 0.85em;
             outline: none;
         }
 
         .item-row input[type="number"] {
-            width: 110px;
+            width: 105px;
             background: transparent;
             border: none;
             color: var(--text-main);
-            font-size: 0.9em;
+            font-size: 0.88em;
             font-weight: 700;
             text-align: right;
             outline: none;
@@ -267,9 +297,8 @@
             background: transparent;
             border: none;
             color: rgba(244, 63, 94, 0.4);
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -279,16 +308,42 @@
 
         .delete-btn:active {
             color: var(--danger-color);
-            background: rgba(244, 63, 94, 0.15);
         }
 
-        /* Toast de confirmación */
+        /* Botón de Nueva Categoría */
+        .add-category-bar {
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .add-cat-btn {
+            width: 100%;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px dashed rgba(99, 102, 241, 0.4);
+            border-radius: 16px;
+            padding: 12px;
+            color: var(--primary-accent);
+            font-size: 0.88em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .add-cat-btn:active {
+            background: rgba(99, 102, 241, 0.25);
+            transform: scale(0.98);
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: rgba(16, 185, 129, 0.9);
+            background: rgba(16, 185, 129, 0.95);
             color: #000;
             padding: 10px 20px;
             border-radius: 20px;
@@ -310,11 +365,11 @@
 
 <div class="container">
     <header>
-        <h1>Presupuesto 💵</h1>
-        <span class="subtitle">Finanzas Personales</span>
+        <h1>PRESUPUESTO 💵</h1>
+        <span class="subtitle">Finanzas Personales Categorizadas</span>
     </header>
 
-    <!-- Barra de Acciones (Deshacer y Guardar) -->
+    <!-- Toolbar -->
     <div class="toolbar">
         <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
             ↩ Volver atrás
@@ -324,7 +379,7 @@
         </button>
     </div>
 
-    <!-- Dashboard de Indicadores Principal -->
+    <!-- Indicadores -->
     <div class="summary-dashboard">
         <div class="metric-card full-width">
             <span class="metric-label">Superávit Libre Estimado</span>
@@ -341,71 +396,95 @@
     </div>
 
     <!-- SECCIÓN INGRESOS -->
-    <section class="glass-card">
-        <div class="section-header">
-            <span class="section-title">Ingresos</span>
-            <button class="add-btn" onclick="addRow('income-list')">+ Nuevo</button>
-        </div>
-        <div id="income-list" class="item-list"></div>
-    </section>
+    <div id="income-section"></div>
 
-    <!-- SECCIÓN GASTOS -->
-    <section class="glass-card">
-        <div class="section-header">
-            <span class="section-title">Gastos y Servicios</span>
-            <button class="add-btn" onclick="addRow('expense-list')">+ Nuevo</button>
-        </div>
-        <div id="expense-list" class="item-list"></div>
-    </section>
+    <!-- SECCIÓN GASTOS (CATEGORÍAS DINÁMICAS) -->
+    <div id="categories-container"></div>
+
+    <!-- BOTÓN AGREGAR CATEGORÍA -->
+    <div class="add-category-bar">
+        <button class="add-cat-btn" onclick="addNewCategory()">
+            + Agregar Nueva Categoría de Gasto
+        </button>
+    </div>
 </div>
 
-<div id="toast" class="toast">✓ Datos guardados localmente</div>
+<div id="toast" class="toast">✓ Cambios guardados correctamente</div>
 
 <script>
-    // Datos por defecto
+    // Configuración inicial por defecto con Categorías y Colores
     const defaultData = {
-        incomes: [
-            { text: "Sueldo Neto Base Promedio", val: 2771500 },
-            { text: "Recupero Préstamo U.F.", val: 232333.33 },
-            { text: "Feriado Trabajado", val: 108500 }
-        ],
-        expenses: [
-            { text: "Crédito 1", val: 1050000 },
-            { text: "Crédito 2", val: 200000 },
-            { text: "Supermercado ($200k/sem)", val: 800000 },
-            { text: "Carnicería / Verdulería", val: 250000 },
-            { text: "Personal Internet + Flow", val: 216324 },
-            { text: "Edesur (Luz)", val: 94570.28 },
-            { text: "Metrogas (Gas)", val: 74139.23 },
-            { text: "Personal Móvil", val: 36160 },
-            { text: "Movistar Compra", val: 28573.40 },
-            { text: "Movistar Móvil", val: 15002.23 },
-            { text: "Transporte", val: 75000 },
-            { text: "Deportes", val: 38000 },
-            { text: "Xbox", val: 24902.79 },
-            { text: "YouTube", val: 13515.28 },
-            { text: "Spotify", val: 9984.22 },
-            { text: "Crunchyroll", val: 9209.49 },
-            { text: "Prime Video", val: 7863.79 },
-            { text: "Meli+", val: 5490 }
+        incomeCategory: {
+            title: "Ingresos",
+            color: "#10b981",
+            items: [
+                { text: "Sueldo Neto Base Promedio", val: 2771500 },
+                { text: "Recupero Préstamo U.F.", val: 232333.33 },
+                { text: "Feriado Trabajado", val: 108500 }
+            ]
+        },
+        expenseCategories: [
+            {
+                id: "cat_deudas",
+                title: "Créditos y Deudas",
+                color: "#f43f5e",
+                items: [
+                    { text: "Crédicoop", val: 1050000 },
+                    { text: "200 FIJO", val: 200000 }
+                ]
+            },
+            {
+                id: "cat_alimentacion",
+                title: "Alimentación y Hogar",
+                color: "#f59e0b",
+                items: [
+                    { text: "Giyo ($175k/sem)", val: 700000 },
+                    { text: "Carnicería / Verdulería", val: 250000 }
+                ]
+            },
+            {
+                id: "cat_servicios",
+                title: "Servicios del Hogar",
+                color: "#3b82f6",
+                items: [
+                    { text: "Flow", val: 216324 },
+                    { text: "Edesur", val: 94570.28 },
+                    { text: "Metrogas", val: 74139.23 },
+                    { text: "Personal Móvil", val: 36160 },
+                    { text: "Movistar Joel", val: 28573.40 },
+                    { text: "Movistar Giyo", val: 15002.23 }
+                ]
+            },
+            {
+                id: "cat_ocio",
+                title: "Ocio, Deporte y Suscripciones",
+                color: "#a855f7",
+                items: [
+                    { text: "Transporte", val: 75000 },
+                    { text: "Toco y me Voy", val: 38000 },
+                    { text: "Xbox", val: 24902.79 },
+                    { text: "YouTube", val: 13515.28 },
+                    { text: "Spotify", val: 9984.22 },
+                    { text: "Crunchyroll", val: 9209.49 },
+                    { text: "Prime Video", val: 7863.79 },
+                    { text: "Meli+", val: 5490 }
+                ]
+            }
         ]
     };
 
     let historyStack = [];
 
-    // Formateador de moneda
     function formatCurrency(val) {
         return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(val);
     }
 
-    // Captura el estado actual antes de un cambio
     function pushState() {
         const state = getCurrentData();
         historyStack.push(JSON.stringify(state));
         document.getElementById('undo-btn').disabled = false;
     }
 
-    // Deshacer la última acción
     function undo() {
         if (historyStack.length > 0) {
             const previousState = JSON.parse(historyStack.pop());
@@ -417,40 +496,104 @@
         }
     }
 
-    // Obtener los datos actualmente visibles en pantalla
     function getCurrentData() {
-        const incomes = [];
-        document.querySelectorAll('#income-list .item-row').forEach(row => {
-            incomes.push({
+        // Obtener Ingresos
+        const incomeInc = {
+            title: "Ingresos",
+            color: document.getElementById('income-color-picker')?.value || "#10b981",
+            items: []
+        };
+        document.querySelectorAll('#income-items .item-row').forEach(row => {
+            incomeInc.items.push({
                 text: row.querySelector('input[type="text"]').value,
                 val: parseFloat(row.querySelector('input[type="number"]').value) || 0
             });
         });
 
-        const expenses = [];
-        document.querySelectorAll('#expense-list .item-row').forEach(row => {
-            expenses.push({
-                text: row.querySelector('input[type="text"]').value,
-                val: parseFloat(row.querySelector('input[type="number"]').value) || 0
+        // Obtener Categorías de Gastos
+        const expenseCategories = [];
+        document.querySelectorAll('.expense-category-card').forEach(card => {
+            const catId = card.id;
+            const title = card.querySelector('.category-title').value;
+            const color = card.querySelector('.color-picker-input').value;
+            const items = [];
+            card.querySelectorAll('.item-row').forEach(row => {
+                items.push({
+                    text: row.querySelector('input[type="text"]').value,
+                    val: parseFloat(row.querySelector('input[type="number"]').value) || 0
+                });
             });
+            expenseCategories.push({ id: catId, title, color, items });
         });
 
-        return { incomes, expenses };
+        return { incomeCategory: incomeInc, expenseCategories };
     }
 
-    // Renderizar una lista de datos en el DOM
     function renderData(data) {
-        const incomeList = document.getElementById('income-list');
-        const expenseList = document.getElementById('expense-list');
-        
-        incomeList.innerHTML = '';
-        expenseList.innerHTML = '';
+        // Render Ingresos
+        const incomeSec = document.getElementById('income-section');
+        incomeSec.innerHTML = `
+            <div class="category-card" style="--category-color: ${data.incomeCategory.color};">
+                <div class="category-header">
+                    <div class="category-title-wrap">
+                        <input type="color" id="income-color-picker" class="color-picker-input" value="${data.incomeCategory.color}" onchange="updateIncomeColor(this.value)">
+                        <span style="font-weight:700; font-size:1em; color:var(--text-main);">Ingresos</span>
+                    </div>
+                    <button class="add-item-btn" onclick="addItemToCategory('income-items', 'income')">+ Ítem</button>
+                </div>
+                <div id="income-items" class="item-list"></div>
+            </div>
+        `;
 
-        data.incomes.forEach(item => incomeList.appendChild(createRow(item.text, item.val, 'income-value')));
-        data.expenses.forEach(item => expenseList.appendChild(createRow(item.text, item.val, 'expense-value')));
+        const incomeItemsCont = document.getElementById('income-items');
+        data.incomeCategory.items.forEach(item => {
+            incomeItemsCont.appendChild(createRow(item.text, item.val, 'income-val'));
+        });
+
+        // Render Gastos
+        const catContainer = document.getElementById('categories-container');
+        catContainer.innerHTML = '';
+        data.expenseCategories.forEach(cat => {
+            catContainer.appendChild(createCategoryCard(cat));
+        });
     }
 
-    // Crear un elemento de fila
+    function updateIncomeColor(color) {
+        pushState();
+        document.getElementById('income-section').querySelector('.category-card').style.setProperty('--category-color', color);
+    }
+
+    function createCategoryCard(cat) {
+        const card = document.createElement('div');
+        card.className = 'category-card expense-category-card';
+        card.id = cat.id || 'cat_' + Date.now();
+        card.style.setProperty('--category-color', cat.color);
+
+        card.innerHTML = `
+            <div class="category-header">
+                <div class="category-title-wrap">
+                    <input type="color" class="color-picker-input" value="${cat.color}" onchange="changeCategoryColor('${card.id}', this.value)">
+                    <input type="text" class="category-title" value="${cat.title}" onfocus="pushState()" onchange="calculate()">
+                </div>
+                <button class="add-item-btn" onclick="addItemToCategory('${card.id}_items', 'expense')">+ Ítem</button>
+                <button class="delete-category-btn" onclick="deleteCategory('${card.id}')">✕</button>
+            </div>
+            <div id="${card.id}_items" class="item-list"></div>
+        `;
+
+        const itemsCont = card.querySelector('.item-list');
+        cat.items.forEach(item => {
+            itemsCont.appendChild(createRow(item.text, item.val, 'expense-val'));
+        });
+
+        return card;
+    }
+
+    function changeCategoryColor(catId, color) {
+        pushState();
+        document.getElementById(catId).style.setProperty('--category-color', color);
+    }
+
     function createRow(text, val, valueClass) {
         const row = document.createElement('div');
         row.className = 'item-row';
@@ -462,12 +605,31 @@
         return row;
     }
 
-    function addRow(containerId) {
+    function addItemToCategory(containerId, type) {
         pushState();
         const container = document.getElementById(containerId);
-        const isIncome = containerId === 'income-list';
-        const valueClass = isIncome ? 'income-value' : 'expense-value';
+        const valueClass = type === 'income' ? 'income-val' : 'expense-val';
         container.appendChild(createRow('', 0, valueClass));
+        calculate();
+    }
+
+    function addNewCategory() {
+        pushState();
+        const colors = ['#ec4899', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#64748b'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const newCat = {
+            id: 'cat_' + Date.now(),
+            title: 'Nueva Categoría',
+            color: randomColor,
+            items: [{ text: '', val: 0 }]
+        };
+        document.getElementById('categories-container').appendChild(createCategoryCard(newCat));
+        calculate();
+    }
+
+    function deleteCategory(catId) {
+        pushState();
+        document.getElementById(catId).remove();
         calculate();
     }
 
@@ -481,11 +643,11 @@
         let totalIncome = 0;
         let totalExpense = 0;
 
-        document.querySelectorAll('.income-value').forEach(input => {
+        document.querySelectorAll('.income-val').forEach(input => {
             totalIncome += parseFloat(input.value) || 0;
         });
 
-        document.querySelectorAll('.expense-value').forEach(input => {
+        document.querySelectorAll('.expense-val').forEach(input => {
             totalExpense += parseFloat(input.value) || 0;
         });
 
@@ -496,19 +658,17 @@
         document.getElementById('net-balance').innerText = formatCurrency(balance);
     }
 
-    // Guardar información en LocalStorage
     function saveData() {
         const data = getCurrentData();
-        localStorage.setItem('presupuesto_data', JSON.stringify(data));
+        localStorage.setItem('presupuesto_categorias_data', JSON.stringify(data));
         
         const toast = document.getElementById('toast');
         toast.className = 'toast show';
         setTimeout(() => toast.className = 'toast', 2000);
     }
 
-    // Cargar información al iniciar
     function loadData() {
-        const saved = localStorage.getItem('presupuesto_data');
+        const saved = localStorage.getItem('presupuesto_categorias_data');
         if (saved) {
             try {
                 renderData(JSON.parse(saved));
