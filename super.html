@@ -1,0 +1,597 @@
+<a_file_is_created>
+  <file_name>presupuesto_planificador_superavit.html</file_name>
+  <file_content><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificador de Superávit & Metas</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 28, 45, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary-accent: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.35);
+            --success-color: #10b981;
+            --danger-color: #f43f5e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --input-bg: rgba(15, 23, 42, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 8px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 4px 0;
+        }
+
+        .subtitle {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tool-btn {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 0.82em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .tool-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .tool-btn:not(:disabled):active {
+            transform: scale(0.96);
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary-accent);
+        }
+
+        .tool-btn.save-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--success-color);
+        }
+
+        /* Hero Card: Superávit Restante */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.35);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 25px var(--primary-glow);
+            text-align: center;
+        }
+
+        .hero-label {
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 700;
+        }
+
+        .hero-value {
+            font-size: 2em;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .hero-value.positive {
+            background: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-value.negative {
+            background: linear-gradient(135deg, #ffffff 0%, #f43f5e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Barra de progreso */
+        .progress-bar-wrap {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #6366f1 100%);
+            border-radius: 10px;
+            width: 0%;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Input del Superávit Inicial */
+        .base-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .base-card label {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .base-card input[type="number"] {
+            width: 140px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--success-color);
+            font-size: 1em;
+            font-weight: 800;
+            text-align: right;
+            outline: none;
+            font-family: monospace;
+        }
+
+        /* Sección de Metas / Asignaciones */
+        .section-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -10px rgba(0,0,0,0.4);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 0.95em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary-accent);
+            box-shadow: 0 0 8px var(--primary-accent);
+        }
+
+        .add-btn {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-accent);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 0.78em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+            background: var(--primary-accent);
+            color: #fff;
+        }
+
+        /* Lista de asignaciones */
+        .allocation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .allocation-item {
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .allocation-item.active-item {
+            border-left: 4px solid var(--primary-accent);
+        }
+
+        .item-main-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item-main-row input[type="text"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9em;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .item-main-row input[type="number"] {
+            width: 120px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            color: var(--primary-accent);
+            font-size: 0.9em;
+            font-weight: 700;
+            text-align: right;
+            outline: none;
+            font-family: monospace;
+        }
+
+        .item-sub-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78em;
+            color: var(--text-muted);
+            padding-top: 4px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.06);
+        }
+
+        .color-picker {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .color-picker::-webkit-color-swatch {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: rgba(244, 63, 94, 0.4);
+            cursor: pointer;
+            font-size: 1.1em;
+            padding: 0 4px;
+        }
+
+        .delete-btn:active {
+            color: var(--danger-color);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(16, 185, 129, 0.95);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Planificador de Superávit</h1>
+        <span class="subtitle">Asignación de Fondos Sobrantes</span>
+    </header>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
+            ↩ Volver atrás
+        </button>
+        <button class="tool-btn save-btn" onclick="saveData()">
+            💾 Guardar plan
+        </button>
+    </div>
+
+    <!-- Hero Card: Superávit Disponible -->
+    <div class="hero-card">
+        <span class="hero-label">Superávit Sin Asignar</span>
+        <div id="remaining-surplus" class="hero-value positive">$163.599</div>
+        
+        <div class="progress-bar-wrap">
+            <div id="progress-fill" class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-stats">
+            <span id="allocated-percentage">0% Asignado</span>
+            <span id="allocated-total">Total: $0</span>
+        </div>
+    </div>
+
+    <!-- Base: Superávit de Origen -->
+    <div class="base-card">
+        <label for="base-surplus-input">Superávit Base Mensual</label>
+        <input type="number" id="base-surplus-input" value="163598.62" onfocus="pushState()" oninput="calculate()">
+    </div>
+
+    <!-- Sección Metas / Gastos de Superávit -->
+    <div class="section-card">
+        <div class="section-header">
+            <span class="section-title">Destinos del Superávit</span>
+            <button class="add-btn" onclick="addAllocation()">+ Nueva Asignación</button>
+        </div>
+
+        <div id="allocation-list" class="allocation-list"></div>
+    </div>
+</div>
+
+<div id="toast" class="toast">✓ Plan guardado correctamente</div>
+
+<script>
+    // Configuración predeterminada
+    const defaultData = {
+        baseSurplus: 163598.62,
+        allocations: [
+            { id: "alloc_1", title: "Fondo de Reserva / Cobertura (USD)", val: 100000, color: "#10b981" },
+            { id: "alloc_2", title: "Gustos / Salidas Extra", val: 40000, color: "#a855f7" },
+            { id: "alloc_3", title: "Ahorro / Objetivos", val: 20000, color: "#3b82f6" }
+        ]
+    };
+
+    let historyStack = [];
+
+    function formatCurrency(val) {
+        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(val);
+    }
+
+    function pushState() {
+        const state = getCurrentData();
+        historyStack.push(JSON.stringify(state));
+        document.getElementById('undo-btn').disabled = false;
+    }
+
+    function undo() {
+        if (historyStack.length > 0) {
+            const previousState = JSON.parse(historyStack.pop());
+            renderData(previousState);
+            calculate();
+            if (historyStack.length === 0) {
+                document.getElementById('undo-btn').disabled = true;
+            }
+        }
+    }
+
+    function getCurrentData() {
+        const baseSurplus = parseFloat(document.getElementById('base-surplus-input').value) || 0;
+        const allocations = [];
+
+        document.querySelectorAll('.allocation-item').forEach(item => {
+            allocations.push({
+                id: item.id,
+                title: item.querySelector('.alloc-title').value,
+                val: parseFloat(item.querySelector('.alloc-val').value) || 0,
+                color: item.querySelector('.color-picker').value
+            });
+        });
+
+        return { baseSurplus, allocations };
+    }
+
+    function renderData(data) {
+        document.getElementById('base-surplus-input').value = data.baseSurplus;
+        
+        const list = document.getElementById('allocation-list');
+        list.innerHTML = '';
+        
+        data.allocations.forEach(alloc => {
+            list.appendChild(createAllocationCard(alloc));
+        });
+    }
+
+    function createAllocationCard(alloc) {
+        const card = document.createElement('div');
+        card.className = 'allocation-item active-item';
+        card.id = alloc.id || 'alloc_' + Date.now();
+        card.style.borderLeftColor = alloc.color;
+
+        card.innerHTML = `
+            <div class="item-main-row">
+                <input type="text" class="alloc-title" value="${alloc.title}" placeholder="Nombre de la asignación" onfocus="pushState()" onchange="calculate()">
+                <input type="number" class="alloc-val" value="${alloc.val}" onfocus="pushState()" oninput="calculate()">
+            </div>
+            <div class="item-sub-row">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <input type="color" class="color-picker" value="${alloc.color}" onchange="updateCardColor('${card.id}', this.value)">
+                    <span class="alloc-percentage">0% del sobrante</span>
+                </div>
+                <button class="delete-btn" onclick="deleteAllocation('${card.id}')">✕ Eliminar</button>
+            </div>
+        `;
+
+        return card;
+    }
+
+    function updateCardColor(cardId, color) {
+        pushState();
+        document.getElementById(cardId).style.borderLeftColor = color;
+    }
+
+    function addAllocation() {
+        pushState();
+        const colors = ['#6366f1', '#10b981', '#ec4899', '#f59e0b', '#3b82f6', '#8b5cf6'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const newAlloc = {
+            id: 'alloc_' + Date.now(),
+            title: 'Nueva Asignación',
+            val: 0,
+            color: randomColor
+        };
+        document.getElementById('allocation-list').appendChild(createAllocationCard(newAlloc));
+        calculate();
+    }
+
+    function deleteAllocation(id) {
+        pushState();
+        document.getElementById(id).remove();
+        calculate();
+    }
+
+    function calculate() {
+        const baseSurplus = parseFloat(document.getElementById('base-surplus-input').value) || 0;
+        let totalAllocated = 0;
+
+        document.querySelectorAll('.allocation-item').forEach(item => {
+            const val = parseFloat(item.querySelector('.alloc-val').value) || 0;
+            totalAllocated += val;
+
+            // Calcular porcentaje individual respecto al superávit total
+            const pct = baseSurplus > 0 ? Math.round((val / baseSurplus) * 100) : 0;
+            item.querySelector('.alloc-percentage').innerText = `${pct}% del sobrante`;
+        });
+
+        const remaining = baseSurplus - totalAllocated;
+        const remainingEl = document.getElementById('remaining-surplus');
+        remainingEl.innerText = formatCurrency(remaining);
+
+        if (remaining >= 0) {
+            remainingEl.className = 'hero-value positive';
+        } else {
+            remainingEl.className = 'hero-value negative';
+        }
+
+        // Actualizar barra de progreso
+        const allocatedPct = baseSurplus > 0 ? Math.min(Math.round((totalAllocated / baseSurplus) * 100), 100) : 0;
+        document.getElementById('progress-fill').style.width = allocatedPct + '%';
+        document.getElementById('allocated-percentage').innerText = `${allocatedPct}% Asignado`;
+        document.getElementById('allocated-total').innerText = `Asignado: ${formatCurrency(totalAllocated)}`;
+    }
+
+    function saveData() {
+        const data = getCurrentData();
+        localStorage.setItem('planificador_superavit_data', JSON.stringify(data));
+        
+        const toast = document.getElementById('toast');
+        toast.className = 'toast show';
+        setTimeout(() => toast.className = 'toast', 2000);
+    }
+
+    function loadData() {
+        const saved = localStorage.getItem('planificador_superavit_data');
+        if (saved) {
+            try {
+                renderData(JSON.parse(saved));
+            } catch(e) {
+                renderData(defaultData);
+            }
+        } else {
+            renderData(defaultData);
+        }
+        calculate();
+    }
+
+    loadData();
+</script>
+
+</body>
+</html>
+</file_content>
+</a_file_is_created>
