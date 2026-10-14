@@ -1,5 +1,5 @@
 <a_file_is_created>
-  <file_name>super.html</file_name>
+  
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -390,13 +390,13 @@
 
 <div class="container">
     <header>
-        <h1>Planificador de Superávit</h1>
-        <span class="subtitle">Asignación de Fondos Sobrantes</span>
+        <h1>LIBRE</h1>
+        <span class="subtitle">Asignación de Fondos Libres</span>
     </header>
 
     <div class="toolbar">
         <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
-            ↩ Volver atrás
+            ↩ Undo
         </button>
         <button class="tool-btn save-btn" onclick="saveData()">
             💾 Guardar plan
@@ -404,13 +404,13 @@
     </div>
 
     <div class="nav-bar">
-        <a href="presupuesto_categorias_colores.html" class="tool-btn back-btn">
+        <a href="index.html" class="tool-btn back-btn">
             📋 ↩ Volver al Presupuesto
         </a>
     </div>
 
     <div class="hero-card">
-        <span class="hero-label">Superávit Sin Asignar</span>
+        <span class="hero-label">RESTO</span>
         <div id="remaining-surplus" class="hero-value positive">$0</div>
         
         <div class="progress-bar-wrap">
@@ -429,7 +429,7 @@
 
     <div class="section-card">
         <div class="section-header">
-            <span class="section-title">Destinos del Superávit</span>
+            <span class="section-title">Gastos Diarios</span>
             <button class="add-btn" onclick="addAllocation()">+ Nueva Asignación</button>
         </div>
 
@@ -437,7 +437,7 @@
     </div>
 </div>
 
-<div id="toast" class="toast">✓ Plan guardado correctamente</div>
+<div id="toast" class="toast">✓ Guardado correctamente</div>
 
 <script>
     function getTodayFormatted() {
