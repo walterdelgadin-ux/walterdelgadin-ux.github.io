@@ -1,5 +1,5 @@
 <a_file_is_created>
-  
+  <file_name>super.html</file_name>
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -67,7 +67,6 @@
             letter-spacing: 0.1em;
         }
 
-        /* Toolbar */
         .toolbar {
             display: flex;
             gap: 10px;
@@ -120,13 +119,6 @@
             padding: 12px 14px;
         }
 
-        .tool-btn.back-btn:active {
-            transform: scale(0.96);
-            background: rgba(99, 102, 241, 0.3);
-            color: #fff;
-        }
-
-        /* Hero Card: Superávit Restante */
         .hero-card {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.18) 0%, rgba(15, 23, 42, 0.8) 100%);
             border: 1px solid rgba(99, 102, 241, 0.35);
@@ -166,7 +158,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Barra de progreso */
         .progress-bar-wrap {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -190,7 +181,6 @@
             font-weight: 600;
         }
 
-        /* Input del Superávit Inicial */
         .base-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -223,7 +213,6 @@
             font-family: monospace;
         }
 
-        /* Sección de Metas / Asignaciones */
         .section-card {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -273,13 +262,6 @@
             cursor: pointer;
         }
 
-        .add-btn:active {
-            transform: scale(0.95);
-            background: var(--primary-accent);
-            color: #fff;
-        }
-
-        /* Lista de asignaciones */
         .allocation-list {
             display: flex;
             flex-direction: column;
@@ -366,11 +348,6 @@
             padding: 0 4px;
         }
 
-        .delete-btn:active {
-            color: var(--danger-color);
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -398,30 +375,27 @@
 
 <div class="container">
     <header>
-        <h1>LIBRE</h1>
-        <span class="subtitle">Gastos Diarios</span>
+        <h1>Planificador de Superávit</h1>
+        <span class="subtitle">Asignación de Fondos Sobrantes</span>
     </header>
 
-    <!-- Toolbar de Acciones -->
     <div class="toolbar">
         <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
-            ↩ Undo
+            ↩ Volver atrás
         </button>
         <button class="tool-btn save-btn" onclick="saveData()">
-            💾 Guardar
+            💾 Guardar plan
         </button>
     </div>
 
-    <!-- Botón para regresar al Presupuesto Principal -->
     <div class="nav-bar">
-        <a href="index.html" class="tool-btn back-btn">
+        <a href="presupuesto_categorias_colores.html" class="tool-btn back-btn">
             📋 ↩ Volver al Presupuesto
         </a>
     </div>
 
-    <!-- Hero Card: Superávit Disponible -->
     <div class="hero-card">
-        <span class="hero-label">Resto</span>
+        <span class="hero-label">Superávit Sin Asignar</span>
         <div id="remaining-surplus" class="hero-value positive">$0</div>
         
         <div class="progress-bar-wrap">
@@ -433,16 +407,14 @@
         </div>
     </div>
 
-    <!-- Base: Superávit de Origen -->
     <div class="base-card">
-        <label for="base-surplus-input">Editar Resto</label>
+        <label for="base-surplus-input">Superávit Base Mensual</label>
         <input type="number" id="base-surplus-input" value="163598.62" onfocus="pushState()" oninput="calculate()">
     </div>
 
-    <!-- Sección Metas / Gastos de Superávit -->
     <div class="section-card">
         <div class="section-header">
-            <span class="section-title">Gastos</span>
+            <span class="section-title">Destinos del Superávit</span>
             <button class="add-btn" onclick="addAllocation()">+ Nueva Asignación</button>
         </div>
 
@@ -450,10 +422,9 @@
     </div>
 </div>
 
-<div id="toast" class="toast">✓ Guardado correctamente</div>
+<div id="toast" class="toast">✓ Plan guardado correctamente</div>
 
 <script>
-    // Configuración predeterminada
     const defaultData = {
         baseSurplus: 163598.62,
         allocations: [
@@ -598,28 +569,51 @@
         setTimeout(() => toast.className = 'toast', 2000);
     }
 
+    // CONEXIÓN AUTOMÁTICA CON EL PRESUPUESTO
     function loadData() {
-        const savedSurplus = localStorage.getItem('presupuesto_superavit_libre');
+        // Lee el presupuesto guardado en la app principal
+        const budgetSaved = localStorage.getItem('presupuesto_categorias_data');
+        let calculatedSurplus = null;
+
+        if (budgetSaved) {
+            try {
+                const parsedBudget = JSON.parse(budgetSaved);
+                let incomeTotal = 0;
+                let expenseTotal = 0;
+
+                if (parsedBudget.incomeCategory && parsedBudget.incomeCategory.items) {
+                    incomeTotal = parsedBudget.incomeCategory.items.reduce((acc, i) => acc + (parseFloat(i.val) || 0), 0);
+                }
+                if (parsedBudget.expenseCategories) {
+                    expenseTotal = parsedBudget.expenseCategories.reduce((acc, cat) => {
+                        return acc + (cat.items ? cat.items.reduce((a, i) => a + (parseFloat(i.val) || 0), 0) : 0);
+                    }, 0);
+                }
+
+                calculatedSurplus = incomeTotal - expenseTotal;
+            } catch(e) {}
+        }
+
         const savedPlan = localStorage.getItem('planificador_superavit_data');
-        
         if (savedPlan) {
             try {
-                const parsed = JSON.parse(savedPlan);
-                if (savedSurplus !== null) {
-                    parsed.baseSurplus = parseFloat(savedSurplus);
+                const parsedPlan = JSON.parse(savedPlan);
+                if (calculatedSurplus !== null) {
+                    parsedPlan.baseSurplus = calculatedSurplus;
                 }
-                renderData(parsed);
+                renderData(parsedPlan);
             } catch(e) {
-                if (savedSurplus !== null) defaultData.baseSurplus = parseFloat(savedSurplus);
+                if (calculatedSurplus !== null) defaultData.baseSurplus = calculatedSurplus;
                 renderData(defaultData);
             }
         } else {
-            if (savedSurplus !== null) defaultData.baseSurplus = parseFloat(savedSurplus);
+            if (calculatedSurplus !== null) defaultData.baseSurplus = calculatedSurplus;
             renderData(defaultData);
         }
         calculate();
     }
 
+    loadData();
 </script>
 
 </body>
