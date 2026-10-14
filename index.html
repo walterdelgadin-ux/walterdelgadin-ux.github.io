@@ -656,6 +656,10 @@
     function saveData() {
         const data = getCurrentData();
         localStorage.setItem('presupuesto_categorias_data', JSON.stringify(data));
+
+const totalIncome = data.incomeCategory.items.reduce((acc, item) => acc + item.val, 0);
+        const totalExpenses = data.expenseCategories.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.val, 0), 0);
+        localStorage.setItem('presupuesto_superavit_libre', (totalIncome - totalExpenses));
         
         const toast = document.getElementById('toast');
         toast.className = 'toast show';
