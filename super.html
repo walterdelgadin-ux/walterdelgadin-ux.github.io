@@ -599,20 +599,27 @@
     }
 
     function loadData() {
-        const saved = localStorage.getItem('planificador_superavit_data');
-        if (saved) {
+        const savedSurplus = localStorage.getItem('presupuesto_superavit_libre');
+        const savedPlan = localStorage.getItem('planificador_superavit_data');
+        
+        if (savedPlan) {
             try {
-                renderData(JSON.parse(saved));
+                const parsed = JSON.parse(savedPlan);
+                if (savedSurplus !== null) {
+                    parsed.baseSurplus = parseFloat(savedSurplus);
+                }
+                renderData(parsed);
             } catch(e) {
+                if (savedSurplus !== null) defaultData.baseSurplus = parseFloat(savedSurplus);
                 renderData(defaultData);
             }
         } else {
+            if (savedSurplus !== null) defaultData.baseSurplus = parseFloat(savedSurplus);
             renderData(defaultData);
         }
         calculate();
     }
 
-    loadData();
 </script>
 
 </body>
