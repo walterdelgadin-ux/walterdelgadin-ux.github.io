@@ -1,0 +1,667 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Gastos SUBE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Smooth scrolling and touch adjustments */
+        body { -webkit-tap-highlight-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 font-sans p-3 sm:p-6 lg:p-8">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <header class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid me-1 fa-ticket text-blue-600"></i> Control de Gastos SUBE
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Gestión de saldo, pasajes y tarifas personalizables</p>
+            </div>
+            <button onclick="toggleModal('tarifasModal')" class="w-full sm:w-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs sm:text-sm rounded-xl transition flex items-center justify-center gap-2 border border-slate-200">
+                <i class="fa-solid fa-sliders text-blue-600"></i> Configurar Tarifas
+            </button>
+        </header>
+
+        <!-- Dashboard principal: Saldo & Resumen -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Card 1: Saldo Disponible -->
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-5 sm:p-6 rounded-2xl shadow-md flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 opacity-10 text-white text-8xl">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div>
+                    <span class="text-xs uppercase font-semibold tracking-wider opacity-80">Saldo Disponible</span>
+                    <div id="saldoDisplay" class="text-3xl sm:text-4xl font-black mt-1 tracking-tight">$0,00</div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/20 flex justify-between items-center text-xs text-blue-100">
+                    <span>Gasto Acumulado:</span>
+                    <span id="gastoTotalDisplay" class="font-bold text-white text-sm">$0,00</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Cargar / Editar Saldo -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <label for="inputSaldo" class="block text-xs font-semibold uppercase text-slate-500 mb-2">Ajustar Saldo Actual ($)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-400 font-semibold">$</span>
+                        <input type="number" id="inputSaldo" step="0.01" placeholder="Ej: 5000" class="w-full pl-7 pr-3 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 font-semibold">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button onclick="setSaldo('remplazar')" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-2 px-3 rounded-xl transition text-xs sm:text-sm shadow-sm">
+                        Establecer
+                    </button>
+                    <button onclick="setSaldo('sumar')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-3 rounded-xl transition text-xs sm:text-sm shadow-sm">
+                        + Recargar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Estado Subte -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-xs font-semibold uppercase text-slate-500">Tramo Subte Actual</span>
+                        <span id="subteTierBadge" class="text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md">Escala 1</span>
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-2xl font-bold text-slate-900">Viaje #<span id="cantSubteDisplay">1</span></span>
+                        <span class="text-xs text-slate-500">del mes</span>
+                    </div>
+                    <div class="text-xs text-slate-600 mt-2">
+                        Próximo costo: <strong id="costoSubteProximo" class="text-blue-600 font-bold">$0,00</strong>
+                    </div>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <label class="text-xs text-slate-500">Viajes hechos:</label>
+                    <input type="number" id="inputContadorSubte" min="1" class="w-16 text-center border border-slate-200 rounded-lg py-1 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500" onchange="ajustarContadorSubte(this.value)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones rápidos de Registro de Viaje -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-emerald-500"></i> Registrar Viaje Realizado
+                </h2>
+                <span class="text-xs text-slate-400">Haz clic para descontar saldo</span>
+            </div>
+
+            <div id="botonesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <!-- Se generan dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Historial de Movimientos -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-slate-500"></i> Historial de Viajes
+                </h2>
+                <div class="flex items-center gap-3">
+                    <button id="btnDeshacer" onclick="deshacerUltimo()" disabled class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-700 font-medium px-3 py-1.5 rounded-lg border border-amber-200 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> Deshacer último
+                    </button>
+                    <button onclick="confirmarReiniciar()" class="text-xs text-red-600 hover:text-red-700 font-medium hover:underline">
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+
+            <div id="historialContainer" class="max-h-72 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                <!-- Se generan ítems del historial dinámicamente -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL DE CONFIGURACIÓN DE TARIFAS -->
+    <div id="tarifasModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-slate-200 max-h-[90vh] flex flex-col">
+            
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-blue-600"></i> Configurar Tarifas
+                </h3>
+                <button onclick="toggleModal('tarifasModal')" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto my-4 space-y-6 pr-1 custom-scrollbar">
+                
+                <!-- Tarifas Colectivos -->
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider">Líneas de Colectivo</h4>
+                        <button onclick="agregarLineaColectivo()" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 font-semibold px-2.5 py-1 rounded-lg transition">
+                            + Agregar Línea
+                        </button>
+                    </div>
+                    <div id="colectivosEditContainer" class="space-y-2.5">
+                        <!-- Inputs de líneas de colectivo -->
+                    </div>
+                </div>
+
+                <!-- Tarifas Escalonadas Subte -->
+                <div class="pt-4 border-t border-slate-100">
+                    <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3">Escala de Tarifas Subte</h4>
+                    <div class="space-y-2.5">
+                        <div class="grid grid-cols-2 gap-2 items-center bg-slate-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-semibold text-slate-600">Viajes 1 a 20:</span>
+                            <div class="relative">
+                                <span class="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">$</span>
+                                <input type="number" id="subteTier1" step="0.01" class="w-full pl-6 pr-2 py-1 text-xs font-bold border border-slate-200 rounded-lg">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 items-center bg-slate-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-semibold text-slate-600">Viajes 21 a 30:</span>
+                            <div class="relative">
+                                <span class="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">$</span>
+                                <input type="number" id="subteTier2" step="0.01" class="w-full pl-6 pr-2 py-1 text-xs font-bold border border-slate-200 rounded-lg">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 items-center bg-slate-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-semibold text-slate-600">Viajes 31 a 40:</span>
+                            <div class="relative">
+                                <span class="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">$</span>
+                                <input type="number" id="subteTier3" step="0.01" class="w-full pl-6 pr-2 py-1 text-xs font-bold border border-slate-200 rounded-lg">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 items-center bg-slate-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-semibold text-slate-600">Viajes 41 en adelante:</span>
+                            <div class="relative">
+                                <span class="absolute left-2.5 top-1.5 text-xs text-slate-400 font-bold">$</span>
+                                <input type="number" id="subteTier4" step="0.01" class="w-full pl-6 pr-2 py-1 text-xs font-bold border border-slate-200 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex justify-end gap-2">
+                <button onclick="toggleModal('tarifasModal')" class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 font-medium text-xs rounded-xl transition">
+                    Cancelar
+                </button>
+                <button onclick="guardarConfiguracionTarifas()" class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 font-semibold text-xs rounded-xl transition shadow-sm">
+                    Guardar Cambios
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR INDIVIDUAL COLECTIVO -->
+    <div id="editarColectivoModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-xl border border-slate-200">
+            <h3 class="text-base font-bold text-slate-900 mb-3" id="editModalTitle">Editar Línea</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Nombre de la línea / tarifa</label>
+                    <input type="text" id="editModalNombre" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Precio del boleto ($)</label>
+                    <input type="number" id="editModalPrecio" step="0.01" class="w-full px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold">
+                </div>
+            </div>
+            <div class="mt-5 flex justify-end gap-2">
+                <button onclick="toggleModal('editarColectivoModal')" class="px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg">Cancelar</button>
+                <button onclick="guardarEdicionIndividualColectivo()" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICACIONES TOAST -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg">Acción realizada</span>
+    </div>
+
+    <script>
+        // ESTADO GLOBAL CON PERSISTENCIA LOCALSTORAGE
+        let state = {
+            saldo: 0,
+            gastoTotal: 0,
+            contadorSubte: 1,
+            colectivos: [
+                { id: 'l98', nombre: 'Línea 98', precio: 1151.36, color: 'emerald' },
+                { id: 'l45', nombre: 'Línea 45 (Red SUBE)', precio: 430.83, color: 'purple' }
+            ],
+            subteTarifas: {
+                t1: 1817.00, // 1-20
+                t2: 1453.60, // 21-30
+                t3: 1271.90, // 31-40
+                t4: 1090.20  // 41+
+            },
+            historial: []
+        };
+
+        let editingColectivoId = null;
+
+        // INICIALIZACIÓN
+        window.onload = function() {
+            cargarEstadoGuardado();
+            renderInterfaz();
+        };
+
+        function guardarEstado() {
+            localStorage.setItem('subteTrackerState', JSON.stringify(state));
+        }
+
+        function cargarEstadoGuardado() {
+            const saved = localStorage.getItem('subteTrackerState');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                } catch(e) {
+                    console.error("Error cargando estado guardado", e);
+                }
+            }
+        }
+
+        // CÁLCULOS Y REGLAS DE NEGOCIO
+        function getCostoSubte(numViaje) {
+            if (numViaje <= 20) return state.subteTarifas.t1;
+            if (numViaje <= 30) return state.subteTarifas.t2;
+            if (numViaje <= 40) return state.subteTarifas.t3;
+            return state.subteTarifas.t4;
+        }
+
+        function getSubteBadgeTier(numViaje) {
+            if (numViaje <= 20) return 'Tramo 1 (1-20)';
+            if (numViaje <= 30) return 'Tramo 2 (21-30)';
+            if (numViaje <= 40) return 'Tramo 3 (31-40)';
+            return 'Tramo 4 (41+)';
+        }
+
+        // RENDERIZADO DE LA INTERFAZ
+        function renderInterfaz() {
+            // Saldo y Totales
+            document.getElementById('saldoDisplay').innerText = `$${formatAr(state.saldo)}`;
+            document.getElementById('gastoTotalDisplay').innerText = `$${formatAr(state.gastoTotal)}`;
+            
+            // Subte status
+            document.getElementById('cantSubteDisplay').innerText = state.contadorSubte;
+            document.getElementById('inputContadorSubte').value = state.contadorSubte;
+            const proximoCostoSubte = getCostoSubte(state.contadorSubte);
+            document.getElementById('costoSubteProximo').innerText = `$${formatAr(proximoCostoSubte)}`;
+            document.getElementById('subteTierBadge').innerText = getSubteBadgeTier(state.contadorSubte);
+
+            // Renderizar Botones de Registro
+            renderBotonesRegistro();
+
+            // Renderizar Historial
+            renderHistorial();
+
+            // Deshabilitar/Habilitar deshacer
+            document.getElementById('btnDeshacer').disabled = state.historial.length === 0;
+
+            guardarEstado();
+        }
+
+        function renderBotonesRegistro() {
+            const container = document.getElementById('botonesContainer');
+            container.innerHTML = '';
+
+            // 1. Botón Subte
+            const costoSubte = getCostoSubte(state.contadorSubte);
+            const btnSubte = document.createElement('div');
+            btnSubte.className = 'bg-blue-50/60 border border-blue-200 hover:border-blue-500 rounded-xl p-3.5 flex flex-col justify-between transition group relative';
+            btnSubte.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
+                            <i class="fa-solid fa-subway"></i>
+                        </span>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-sm group-hover:text-blue-600 transition">Subte</h3>
+                            <span class="text-[11px] text-slate-500">Viaje N°${state.contadorSubte}</span>
+                        </div>
+                    </div>
+                    <span class="font-extrabold text-blue-700 text-sm">$${formatAr(costoSubte)}</span>
+                </div>
+                <button onclick="registrarViajeSubte()" class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2 px-3 rounded-lg transition shadow-sm flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-minus text-[10px]"></i> Descontar Subte
+                </button>
+            `;
+            container.appendChild(btnSubte);
+
+            // 2. Botones de Colectivos
+            state.colectivos.forEach(col => {
+                const card = document.createElement('div');
+                card.className = 'bg-slate-50 border border-slate-200 hover:border-slate-400 rounded-xl p-3.5 flex flex-col justify-between transition group relative';
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-lg bg-slate-800 text-white flex items-center justify-center font-bold text-sm">
+                                <i class="fa-solid fa-bus"></i>
+                            </span>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-sm truncate max-w-[120px]" title="${col.nombre}">${col.nombre}</h3>
+                                <button onclick="abrirEdicionIndividualColectivo('${col.id}')" class="text-[10px] text-blue-600 hover:underline flex items-center gap-1">
+                                    <i class="fa-solid fa-pen text-[9px]"></i> Editar precio
+                                </button>
+                            </div>
+                        </div>
+                        <span class="font-extrabold text-slate-900 text-sm">$${formatAr(col.precio)}</span>
+                    </div>
+                    <button onclick="registrarViajeColectivo('${col.id}')" class="w-full mt-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold py-2 px-3 rounded-lg transition shadow-sm flex items-center justify-center gap-1">
+                        <i class="fa-solid fa-minus text-[10px]"></i> Descontar Colectivo
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderHistorial() {
+            const container = document.getElementById('historialContainer');
+            if (state.historial.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-receipt text-3xl mb-2 opacity-50"></i>
+                        <p class="text-xs">Aún no registraste ningún viaje en este período.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            state.historial.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between p-2.5 bg-slate-50 hover:bg-slate-100/80 rounded-xl border border-slate-100 transition text-xs';
+                
+                const icon = item.tipo === 'subte' ? 'fa-subway text-blue-600' : 'fa-bus text-slate-700';
+
+                row.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid ${icon} text-sm"></i>
+                        <div>
+                            <span class="font-bold text-slate-800">${item.detalle}</span>
+                            <span class="text-[10px] text-slate-400 block">${item.fechaHora}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-extrabold text-red-500">-$${formatAr(item.monto)}</span>
+                        <button onclick="eliminarItemHistorial(${index})" class="text-slate-300 hover:text-red-500 p-1 transition" title="Eliminar registro">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // ACCIONES DE REGISTRO
+        function registrarViajeSubte() {
+            const costo = getCostoSubte(state.contadorSubte);
+            state.saldo -= costo;
+            state.gastoTotal += costo;
+
+            const item = {
+                id: Date.now(),
+                tipo: 'subte',
+                detalle: `Subte (Viaje N°${state.contadorSubte})`,
+                monto: costo,
+                fechaHora: obtenerFechaHora(),
+                subteNum: state.contadorSubte
+            };
+
+            state.historial.unshift(item);
+            state.contadorSubte++;
+            
+            showToast(`Subte registrado (-$${formatAr(costo)})`);
+            renderInterfaz();
+        }
+
+        function registrarViajeColectivo(idColectivo) {
+            const col = state.colectivos.find(c => c.id === idColectivo);
+            if (!col) return;
+
+            state.saldo -= col.precio;
+            state.gastoTotal += col.precio;
+
+            const item = {
+                id: Date.now(),
+                tipo: 'colectivo',
+                detalle: col.nombre,
+                monto: col.precio,
+                fechaHora: obtenerFechaHora()
+            };
+
+            state.historial.unshift(item);
+            showToast(`${col.nombre} registrado (-$${formatAr(col.precio)})`);
+            renderInterfaz();
+        }
+
+        function deshacerUltimo() {
+            if (state.historial.length === 0) return;
+            eliminarItemHistorial(0);
+        }
+
+        function eliminarItemHistorial(index) {
+            if (index < 0 || index >= state.historial.length) return;
+            
+            const item = state.historial[index];
+            state.saldo += item.monto;
+            state.gastoTotal -= item.monto;
+
+            // Si era viaje de subte y es consecutivo, reajustamos contador
+            if (item.tipo === 'subte' && item.subteNum) {
+                if (item.subteNum === state.contadorSubte - 1) {
+                    state.contadorSubte--;
+                }
+            }
+
+            state.historial.splice(index, 1);
+            showToast('Registro eliminado y saldo devuelto');
+            renderInterfaz();
+        }
+
+        // CONFIGURACIÓN DE SALDO
+        function setSaldo(modo) {
+            const input = document.getElementById('inputSaldo');
+            const valor = parseFloat(input.value);
+            if (isNaN(valor) || valor < 0) {
+                alert('Por favor ingresa un monto válido');
+                return;
+            }
+
+            if (modo === 'remplazar') {
+                state.saldo = valor;
+                showToast(`Saldo establecido a $${formatAr(valor)}`);
+            } else if (modo === 'sumar') {
+                state.saldo += valor;
+                showToast(`Recargados +$${formatAr(valor)}`);
+            }
+
+            input.value = '';
+            renderInterfaz();
+        }
+
+        function ajustarContadorSubte(val) {
+            const num = parseInt(val);
+            if (!isNaN(num) && num >= 1) {
+                state.contadorSubte = num;
+                renderInterfaz();
+            }
+        }
+
+        // EDICIONES Y MODALES DE CONFIGURACIÓN
+        function abrirEdicionIndividualColectivo(id) {
+            const col = state.colectivos.find(c => c.id === id);
+            if (!col) return;
+            
+            editingColectivoId = id;
+            document.getElementById('editModalTitle').innerText = `Editar ${col.nombre}`;
+            document.getElementById('editModalNombre').value = col.nombre;
+            document.getElementById('editModalPrecio').value = col.precio;
+            
+            toggleModal('editarColectivoModal');
+        }
+
+        function guardarEdicionIndividualColectivo() {
+            if (!editingColectivoId) return;
+            const nombre = document.getElementById('editModalNombre').value.trim();
+            const precio = parseFloat(document.getElementById('editModalPrecio').value);
+
+            if (!nombre || isNaN(precio) || precio < 0) {
+                alert('Datos inválidos');
+                return;
+            }
+
+            const col = state.colectivos.find(c => c.id === editingColectivoId);
+            if (col) {
+                col.nombre = nombre;
+                col.precio = precio;
+                showToast('Línea actualizada');
+            }
+
+            toggleModal('editarColectivoModal');
+            renderInterfaz();
+        }
+
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            
+            if (modal.classList.contains('hidden')) {
+                if (modalId === 'tarifasModal') cargarCamposModalTarifas();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function cargarCamposModalTarifas() {
+            // Subte
+            document.getElementById('subteTier1').value = state.subteTarifas.t1;
+            document.getElementById('subteTier2').value = state.subteTarifas.t2;
+            document.getElementById('subteTier3').value = state.subteTarifas.t3;
+            document.getElementById('subteTier4').value = state.subteTarifas.t4;
+
+            // Colectivos list
+            const container = document.getElementById('colectivosEditContainer');
+            container.innerHTML = '';
+
+            state.colectivos.forEach((col, idx) => {
+                const item = document.createElement('div');
+                item.className = 'grid grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-200';
+                item.innerHTML = `
+                    <div class="col-span-5">
+                        <input type="text" value="${col.nombre}" id="colNombre_${idx}" class="w-full px-2 py-1 text-xs border border-slate-300 rounded-md font-semibold text-slate-700">
+                    </div>
+                    <div class="col-span-5 relative">
+                        <span class="absolute left-2 top-1 text-xs text-slate-400 font-bold">$</span>
+                        <input type="number" step="0.01" value="${col.precio}" id="colPrecio_${idx}" class="w-full pl-5 pr-2 py-1 text-xs border border-slate-300 rounded-md font-bold text-slate-800">
+                    </div>
+                    <div class="col-span-2 text-center">
+                        <button onclick="eliminarLineaColectivo(${idx})" class="text-red-500 hover:text-red-700 text-xs p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function agregarLineaColectivo() {
+            state.colectivos.push({
+                id: 'col_' + Date.now(),
+                nombre: 'Nueva Línea',
+                precio: 1000.00
+            });
+            cargarCamposModalTarifas();
+        }
+
+        function eliminarLineaColectivo(index) {
+            if (state.colectivos.length <= 1) {
+                alert('Debes mantener al menos una línea de colectivo');
+                return;
+            }
+            state.colectivos.splice(index, 1);
+            cargarCamposModalTarifas();
+        }
+
+        function guardarConfiguracionTarifas() {
+            // Subte
+            const t1 = parseFloat(document.getElementById('subteTier1').value);
+            const t2 = parseFloat(document.getElementById('subteTier2').value);
+            const t3 = parseFloat(document.getElementById('subteTier3').value);
+            const t4 = parseFloat(document.getElementById('subteTier4').value);
+
+            if ([t1, t2, t3, t4].some(v => isNaN(v) || v < 0)) {
+                alert('Por favor verifica los valores del Subte');
+                return;
+            }
+
+            state.subteTarifas = { t1, t2, t3, t4 };
+
+            // Colectivos
+            state.colectivos.forEach((col, idx) => {
+                const nomEl = document.getElementById(`colNombre_${idx}`);
+                const preEl = document.getElementById(`colPrecio_${idx}`);
+                if (nomEl && preEl) {
+                    col.nombre = nomEl.value.trim() || 'Línea';
+                    col.precio = parseFloat(preEl.value) || 0;
+                }
+            });
+
+            toggleModal('tarifasModal');
+            showToast('Tarifas actualizadas correctamente');
+            renderInterfaz();
+        }
+
+        function confirmarReiniciar() {
+            if (confirm('¿Estás seguro de resetear el historial y contadores? El saldo actual se mantendrá.')) {
+                state.historial = [];
+                state.gastoTotal = 0;
+                state.contadorSubte = 1;
+                showToast('Historial limpiado');
+                renderInterfaz();
+            }
+        }
+
+        // UTILIDADES
+        function formatAr(monto) {
+            return (monto || 0).toLocaleString('es-AR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function obtenerFechaHora() {
+            const now = new Date();
+            const dia = now.getDate().toString().padStart(2, '0');
+            const mes = (now.getMonth() + 1).toString().padStart(2, '0');
+            const hora = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `${dia}/${mes} ${hora}`;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
+```
