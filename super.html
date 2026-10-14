@@ -1,5 +1,5 @@
 <a_file_is_created>
-  <file_name>super.html</file_name>
+  
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -375,27 +375,27 @@
 
 <div class="container">
     <header>
-        <h1>Planificador de Superávit</h1>
-        <span class="subtitle">Asignación de Fondos Sobrantes</span>
+        <h1>Libre</h1>
+        <span class="subtitle">Asignación de Fondos Libres</span>
     </header>
 
     <div class="toolbar">
         <button id="undo-btn" class="tool-btn" onclick="undo()" disabled>
-            ↩ Volver atrás
+            ↩ Undo
         </button>
         <button class="tool-btn save-btn" onclick="saveData()">
-            💾 Guardar plan
+            💾 Guardar
         </button>
     </div>
 
     <div class="nav-bar">
-        <a href="index.html" class="tool-btn back-btn">
+        <a href="presupuesto_categorias_colores.html" class="tool-btn back-btn">
             📋 ↩ Volver al Presupuesto
         </a>
     </div>
 
     <div class="hero-card">
-        <span class="hero-label">Superávit Sin Asignar</span>
+        <span class="hero-label">RESTO</span>
         <div id="remaining-surplus" class="hero-value positive">$0</div>
         
         <div class="progress-bar-wrap">
@@ -408,13 +408,13 @@
     </div>
 
     <div class="base-card">
-        <label for="base-surplus-input">Superávit Base Mensual</label>
-        <input type="number" id="base-surplus-input" value="163598.62" onfocus="pushState()" oninput="calculate()">
+        <label for="base-surplus-input">Editar Resto</label>
+        <input type="number" id="base-surplus-input" value="163599" step="1" onfocus="pushState()" oninput="calculate()">
     </div>
 
     <div class="section-card">
         <div class="section-header">
-            <span class="section-title">Destinos del Superávit</span>
+            <span class="section-title">Gastos Diarios</span>
             <button class="add-btn" onclick="addAllocation()">+ Nueva Asignación</button>
         </div>
 
@@ -426,7 +426,7 @@
 
 <script>
     const defaultData = {
-        baseSurplus: 163598.62,
+        baseSurplus: 163599,
         allocations: [
             { id: "alloc_1", title: "Fondo de Reserva / Cobertura (USD)", val: 100000, color: "#10b981" },
             { id: "alloc_2", title: "Gustos / Salidas Extra", val: 40000, color: "#a855f7" },
@@ -437,7 +437,7 @@
     let historyStack = [];
 
     function formatCurrency(val) {
-        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(val);
+        return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(Math.round(val));
     }
 
     function pushState() {
@@ -458,7 +458,7 @@
     }
 
     function getCurrentData() {
-        const baseSurplus = parseFloat(document.getElementById('base-surplus-input').value) || 0;
+        const baseSurplus = Math.round(parseFloat(document.getElementById('base-surplus-input').value) || 0);
         const allocations = [];
 
         document.querySelectorAll('.allocation-item').forEach(item => {
@@ -474,7 +474,7 @@
     }
 
     function renderData(data) {
-        document.getElementById('base-surplus-input').value = data.baseSurplus;
+        document.getElementById('base-surplus-input').value = Math.round(data.baseSurplus);
         
         const list = document.getElementById('allocation-list');
         list.innerHTML = '';
@@ -533,7 +533,7 @@
     }
 
     function calculate() {
-        const baseSurplus = parseFloat(document.getElementById('base-surplus-input').value) || 0;
+        const baseSurplus = Math.round(parseFloat(document.getElementById('base-surplus-input').value) || 0);
         let totalAllocated = 0;
 
         document.querySelectorAll('.allocation-item').forEach(item => {
@@ -569,9 +569,7 @@
         setTimeout(() => toast.className = 'toast', 2000);
     }
 
-    // CONEXIÓN AUTOMÁTICA CON EL PRESUPUESTO
     function loadData() {
-        // Lee el presupuesto guardado en la app principal
         const budgetSaved = localStorage.getItem('presupuesto_categorias_data');
         let calculatedSurplus = null;
 
@@ -590,7 +588,8 @@
                     }, 0);
                 }
 
-                calculatedSurplus = incomeTotal - expenseTotal;
+                // Redondeo explícito a número entero
+                calculatedSurplus = Math.round(incomeTotal - expenseTotal);
             } catch(e) {}
         }
 
@@ -600,6 +599,8 @@
                 const parsedPlan = JSON.parse(savedPlan);
                 if (calculatedSurplus !== null) {
                     parsedPlan.baseSurplus = calculatedSurplus;
+                } else {
+                    parsedPlan.baseSurplus = Math.round(parsedPlan.baseSurplus);
                 }
                 renderData(parsedPlan);
             } catch(e) {
