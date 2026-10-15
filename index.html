@@ -1,5 +1,5 @@
 <a_file_is_created>
-  
+  <file_name>presupuesto_plantilla.html</file_name>
   <file_content><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -417,9 +417,9 @@
             title: "Ingresos",
             color: "#10b981",
             items: [
-                { text: "Sueldo Neto Base Promedio", val: 2771500 },
-                { text: "Recupero Préstamo U.F.", val: 232333.33 },
-                { text: "Feriado Trabajado", val: 108500 }
+                { text: "Sueldo Neto Base Promedio", val: 0 },
+                { text: "Recupero Préstamo U.F.", val: 0 },
+                { text: "Feriado Trabajado", val: 0 }
             ]
         },
         expenseCategories: [
@@ -428,8 +428,8 @@
                 title: "Créditos y Deudas",
                 color: "#f43f5e",
                 items: [
-                    { text: "Crédito 1", val: 1050000 },
-                    { text: "Crédito 2", val: 200000 }
+                    { text: "Crédito 1", val: 0 },
+                    { text: "Crédito 2", val: 0 }
                 ]
             },
             {
@@ -437,8 +437,8 @@
                 title: "Alimentación y Hogar",
                 color: "#f59e0b",
                 items: [
-                    { text: "Supermercado ($200k/sem)", val: 800000 },
-                    { text: "Carnicería / Verdulería", val: 250000 }
+                    { text: "Supermercado ($200k/sem)", val: 0 },
+                    { text: "Carnicería / Verdulería", val: 0 }
                 ]
             },
             {
@@ -446,12 +446,12 @@
                 title: "Servicios del Hogar",
                 color: "#3b82f6",
                 items: [
-                    { text: "Personal Internet + Flow", val: 216324 },
-                    { text: "Edesur (Luz)", val: 94570.28 },
-                    { text: "Metrogas (Gas)", val: 74139.23 },
-                    { text: "Personal Móvil", val: 36160 },
-                    { text: "Movistar Compra", val: 28573.40 },
-                    { text: "Movistar Móvil", val: 15002.23 }
+                    { text: "Personal Internet + Flow", val: 0 },
+                    { text: "Edesur (Luz)", val: 0 },
+                    { text: "Metrogas (Gas)", val: 0 },
+                    { text: "Personal Móvil", val: 0 },
+                    { text: "Movistar Compra", val: 0 },
+                    { text: "Movistar Móvil", val: 0 }
                 ]
             },
             {
@@ -459,14 +459,14 @@
                 title: "Ocio, Deporte y Suscripciones",
                 color: "#a855f7",
                 items: [
-                    { text: "Transporte", val: 75000 },
-                    { text: "Deportes", val: 38000 },
-                    { text: "Xbox", val: 24902.79 },
-                    { text: "YouTube", val: 13515.28 },
-                    { text: "Spotify", val: 9984.22 },
-                    { text: "Crunchyroll", val: 9209.49 },
-                    { text: "Prime Video", val: 7863.79 },
-                    { text: "Meli+", val: 5490 }
+                    { text: "Transporte", val: 0 },
+                    { text: "Deportes", val: 0 },
+                    { text: "Xbox", val: 0 },
+                    { text: "YouTube", val: 0 },
+                    { text: "Spotify", val: 0 },
+                    { text: "Crunchyroll", val: 0 },
+                    { text: "Prime Video", val: 0 },
+                    { text: "Meli+", val: 0 }
                 ]
             }
         ]
@@ -657,7 +657,7 @@
         const data = getCurrentData();
         localStorage.setItem('presupuesto_categorias_data', JSON.stringify(data));
 
-const totalIncome = data.incomeCategory.items.reduce((acc, item) => acc + item.val, 0);
+        const totalIncome = data.incomeCategory.items.reduce((acc, item) => acc + item.val, 0);
         const totalExpenses = data.expenseCategories.reduce((acc, cat) => acc + cat.items.reduce((a, i) => a + i.val, 0), 0);
         localStorage.setItem('presupuesto_superavit_libre', (totalIncome - totalExpenses));
         
