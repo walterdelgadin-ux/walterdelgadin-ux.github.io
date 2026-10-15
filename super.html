@@ -452,7 +452,7 @@
 
     <div class="base-card">
         <label for="base-surplus-input">Editar Resto</label>
-        <input type="number" id="base-surplus-input" value="163599" step="1" onfocus="pushState()" oninput="calculate()">
+        <input type="number" id="base-surplus-input" value="0" step="1" onfocus="pushState()" oninput="calculate()">
     </div>
 
     <div class="section-card">
@@ -487,9 +487,9 @@
     const defaultData = {
         baseSurplus: 163599,
         allocations: [
-            { id: "alloc_1", title: "Fondo de Reserva / Cobertura (USD)", val: 100000, color: "#10b981", date: getTodayFormatted() },
-            { id: "alloc_2", title: "Gustos / Salidas Extra", val: 40000, color: "#a855f7", date: getTodayFormatted() },
-            { id: "alloc_3", title: "Ahorro / Objetivos", val: 20000, color: "#3b82f6", date: getTodayFormatted() }
+            { id: "alloc_1", title: "Fondo de Reserva / Cobertura (USD)", val: 0, color: "#10b981", date: getTodayFormatted() },
+            { id: "alloc_2", title: "Gustos / Salidas Extra", val: 0, color: "#a855f7", date: getTodayFormatted() },
+            { id: "alloc_3", title: "Ahorro / Objetivos", val: 0, color: "#3b82f6", date: getTodayFormatted() }
         ]
     };
 
